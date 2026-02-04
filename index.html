@@ -13,7 +13,6 @@
             --bg-color: #f3f4f6;
             --card-bg: #ffffff;
             --text-color: #1f2937;
-            --plyr-color-main: #2563eb; /* لون المشغل */
         }
 
         body {
@@ -68,18 +67,16 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            background-color: #ddd; /* لون رمادي لو الصورة محملتش */
         }
 
         .card-body { padding: 15px; text-align: center; }
         .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; }
         .card-desc { font-size: 0.9rem; color: #666; }
 
-        /* تنسيق كارت الفيديو */
         .video-card { cursor: default; }
         .video-card:hover { transform: none; }
         
-        /* تعديل شكل المشغل ليملأ الكارت */
+        /* تعديل شكل المشغل */
         .plyr {
             border-radius: 12px 12px 0 0;
             --plyr-color-main: #2563eb;
@@ -102,20 +99,19 @@
 
     <script>
         // ==========================================
-        // هام: يرجى تغيير روابط الصور بروابط مباشرة من (Imgur أو Postimages)
-        // روابط جوجل درايف لا تعمل بشكل جيد مع المواقع
+        // قاعدة البيانات (تم تحديث جميع الصور)
         // ==========================================
         
         const platformData = [
           {
             "id": 1,
             "name": "الفرنساوي",
-            "image": "https://drive.google.com/uc?export=view&id=1eaT_568MiRvpWE2r1BxQlIQ6i3XFKWNH", 
+            "image": "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
             "teachers": [
               {
                 "id": 101,
                 "name": "مسيو انس السعيد",
-                "image": "https://drive.google.com/uc?export=view&id=1BbfYT3HO1PXka2lTWpZLf-fbmVQVphyh",
+                "image": "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
                 "courses": [
                   { "id": 1001, "title": "جزء واحد تالتة ثانوي", "description": "بداية المنهج والقواعد الأساسية.", "video_id": "3PC1fxpp-Xk" },
                   { "id": 1002, "title": "جزء اتنين تالتة ثانوي", "description": "استكمال الشرح والتدريبات.", "video_id": "fVJTHj5YW7Y" },
@@ -128,12 +124,12 @@
           {
             "id": 2,
             "name": "الإيطالي",
-            "image": "https://drive.google.com/uc?export=view&id=13UWkwfG-hrFFpBZvnsuSzqaZP-0I1KFa",
+            "image": "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
             "teachers": [
               {
                 "id": 201,
                 "name": "سنيور مدحت غانم",
-                "image": "https://drive.google.com/uc?export=view&id=1Khj4-GsrBQiwylSjK_K8fL0ssKx9nB5K",
+                "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
                 "courses": [
                   { "id": 2001, "title": "الإنقاذ: منهج الإيطالي كاملاً", "description": "المنهج كله في 5 ساعات بس.", "video_id": "T6hpZH5AMnk" }
                 ]
@@ -143,12 +139,12 @@
           {
             "id": 3,
             "name": "الألماني",
-            "image": "https://drive.google.com/uc?export=view&id=1OgKm7oBIMxqySlFrvvlFUQfqRUYw-Cra",
+            "image": "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
             "teachers": [
               {
                 "id": 301,
                 "name": "هير ياسين ابو الزيد",
-                "image": "https://drive.google.com/uc?export=view&id=1rBiSJiaQ0tBu1a25JsdpmNKlsasUwm0U",
+                "image": "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
                 "courses": [
                   { "id": 3001, "title": "اللغة الألمانية - ج1", "description": "الأساسيات وقواعد النطق.", "video_id": "JOLc4Jc9yFU" },
                   { "id": 3002, "title": "اللغة الألمانية - ج2", "description": "الجراماتيك وتريكات الامتحانات.", "video_id": "L2irLAg7jHM" },
@@ -161,12 +157,12 @@
           {
             "id": 4,
             "name": "الإسباني",
-            "image": "https://drive.google.com/uc?export=view&id=1ysyd0XyK_WIqq-FNC55IOULpRyp_5wkI",
+            "image": "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
             "teachers": [
               {
                 "id": 401,
                 "name": "سنيور ماجد فارس",
-                "image": "https://drive.google.com/uc?export=view&id=1wNa11MxJbDOiY5VNRXD-6sKIVoROvYXY",
+                "image": "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
                 "courses": [
                   { "id": 4001, "title": "شرح المنهج كاملاً", "description": "فيديو واحد فيه الخلاصة.", "video_id": "K9ZOydc1cqs" }
                 ]
@@ -174,6 +170,10 @@
             ]
           }
         ];
+
+        // ==========================================
+        // كود العرض (اللوجيك)
+        // ==========================================
 
         const contentArea = document.getElementById('contentArea');
         const sectionTitle = document.getElementById('sectionTitle');
@@ -191,7 +191,7 @@
             platformData.forEach((subject, index) => {
                 contentArea.innerHTML += `
                     <div class="card" onclick="showTeachers(${index})">
-                        <img src="${subject.image}" class="card-img" onerror="this.src='https://placehold.co/600x400?text=Image+Error'" alt="${subject.name}">
+                        <img src="${subject.image}" class="card-img" alt="${subject.name}">
                         <div class="card-body">
                             <div class="card-title">${subject.name}</div>
                             <div class="card-desc">اضغط لعرض المدرسين</div>
@@ -218,7 +218,7 @@
             subject.teachers.forEach((teacher, tIndex) => {
                 contentArea.innerHTML += `
                     <div class="card" onclick="showCourses(${subjectIndex}, ${tIndex})">
-                        <img src="${teacher.image}" class="card-img" onerror="this.src='https://placehold.co/600x400?text=Image+Error'" alt="${teacher.name}">
+                        <img src="${teacher.image}" class="card-img" alt="${teacher.name}">
                         <div class="card-body">
                             <div class="card-title">${teacher.name}</div>
                             <div class="card-desc">اضغط لعرض الكورسات</div>
@@ -240,7 +240,6 @@
             }
 
             teacher.courses.forEach(course => {
-                // هنا بنستخدم كود Plyr المخصص عشان يخفي شكل اليوتيوب
                 contentArea.innerHTML += `
                     <div class="card video-card">
                         <div class="plyr__video-embed" id="player-${course.id}">
@@ -259,7 +258,6 @@
                 `;
             });
 
-            // تفعيل المشغل الاحترافي لكل الفيديوهات
             const players = Plyr.setup('.plyr__video-embed', {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
                 hideControls: true,
@@ -278,4 +276,5 @@
 
     </script>
 </body>
-</html>
+    </html>
+    
