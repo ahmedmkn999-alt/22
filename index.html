@@ -10,9 +10,9 @@
     <style>
         :root {
             --main-color: #2563eb;
-            --bg-color: #f3f4f6;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #1f2937;
+            --text-color: #1e293b;
         }
 
         body {
@@ -26,60 +26,90 @@
         header {
             text-align: center;
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        h1 { margin: 0; color: var(--main-color); }
+        h1 { margin: 0; color: var(--main-color); font-size: 2rem; }
         
         #backBtn {
             display: none;
-            background-color: #fff;
+            background-color: white;
             color: var(--main-color);
             border: 2px solid var(--main-color);
-            padding: 8px 20px;
-            border-radius: 8px;
+            padding: 10px 25px;
+            border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
             margin-bottom: 20px;
             transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        #backBtn:hover { background-color: var(--main-color); color: #fff; }
+        #backBtn:hover { background-color: var(--main-color); color: white; }
 
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 25px;
             padding-bottom: 50px;
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #f1f5f9;
         }
 
-        .card:hover { transform: translateY(-5px); }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
 
         .card-img {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
         }
 
-        .card-body { padding: 15px; text-align: center; }
-        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; }
-        .card-desc { font-size: 0.9rem; color: #666; }
+        /* تنسيق خاص لكروت المجلدات/الكورسات */
+        .folder-card .card-img {
+            height: 140px; 
+            object-fit: contain;
+            padding: 20px;
+            background: #f8fafc;
+        }
 
-        .video-card { cursor: default; }
-        .video-card:hover { transform: none; }
+        .card-body { padding: 20px; text-align: center; }
+        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: #334155; }
+        .card-desc { font-size: 0.9rem; color: #64748b; }
+
+        /* تنسيق الفيديو */
+        .video-wrapper {
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
         
-        /* تعديل شكل المشغل */
-        .plyr {
-            border-radius: 12px 12px 0 0;
+        .video-info { padding: 20px; }
+        .video-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
+        
+        /* تحسين شكل Plyr */
+        .plyr--video {
+            border-radius: 16px 16px 0 0;
             --plyr-color-main: #2563eb;
+        }
+        
+        /* إخفاء عناصر يوتيوب المزعجة */
+        .plyr__video-embed iframe {
+            top: -50%;
+            height: 200%;
         }
     </style>
 </head>
@@ -91,7 +121,7 @@
 
     <div style="max-width: 1200px; margin: 0 auto;">
         <button id="backBtn" onclick="goBack()">🔙 رجوع</button>
-        <h2 id="sectionTitle">اختر المادة</h2>
+        <h2 id="sectionTitle" style="margin-bottom: 20px; color: #475569;">اختر المادة</h2>
         <div id="contentArea" class="grid-container"></div>
     </div>
 
@@ -99,7 +129,7 @@
 
     <script>
         // ==========================================
-        // قاعدة البيانات (تم تحديث جميع الصور)
+        // 1. الداتا الجديدة (نظام المجلدات)
         // ==========================================
         
         const platformData = [
@@ -112,11 +142,18 @@
                 "id": 101,
                 "name": "مسيو انس السعيد",
                 "image": "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
-                "courses": [
-                  { "id": 1001, "title": "جزء واحد تالتة ثانوي", "description": "بداية المنهج والقواعد الأساسية.", "video_id": "3PC1fxpp-Xk" },
-                  { "id": 1002, "title": "جزء اتنين تالتة ثانوي", "description": "استكمال الشرح والتدريبات.", "video_id": "fVJTHj5YW7Y" },
-                  { "id": 1003, "title": "جزء تلاتة تالتة ثانوي", "description": "شرح متقدم وملاحظات هامة.", "video_id": "Afx9AHypc7M" },
-                  { "id": 1004, "title": "الجزء الاخير تالتة ثانوي", "description": "ختام المنهج والمراجعة.", "video_id": "6s_TWiP1KgQ" }
+                "folders": [ // هنا عملنا فولدرات بدل الفيديوهات علطول
+                  {
+                    "id": "f1",
+                    "title": "كورس شرح المنهج 2026",
+                    "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", // أيقونة فولدر
+                    "videos": [
+                        { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج والقواعد الأساسية.", "vid": "3PC1fxpp-Xk" },
+                        { "title": "جزء اتنين تالتة ثانوي", "desc": "استكمال الشرح والتدريبات.", "vid": "fVJTHj5YW7Y" },
+                        { "title": "جزء تلاتة تالتة ثانوي", "desc": "شرح متقدم وملاحظات هامة.", "vid": "Afx9AHypc7M" },
+                        { "title": "الجزء الاخير تالتة ثانوي", "desc": "ختام المنهج والمراجعة.", "vid": "6s_TWiP1KgQ" }
+                    ]
+                  }
                 ]
               }
             ]
@@ -130,8 +167,15 @@
                 "id": 201,
                 "name": "سنيور مدحت غانم",
                 "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
-                "courses": [
-                  { "id": 2001, "title": "الإنقاذ: منهج الإيطالي كاملاً", "description": "المنهج كله في 5 ساعات بس.", "video_id": "T6hpZH5AMnk" }
+                "folders": [
+                   {
+                    "id": "f2",
+                    "title": "مراجعات ليلة الامتحان",
+                    "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
+                    "videos": [
+                        { "title": "الإنقاذ: منهج الإيطالي كاملاً", "desc": "المنهج كله في 5 ساعات بس.", "vid": "T6hpZH5AMnk" }
+                    ]
+                   }
                 ]
               }
             ]
@@ -145,11 +189,18 @@
                 "id": 301,
                 "name": "هير ياسين ابو الزيد",
                 "image": "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
-                "courses": [
-                  { "id": 3001, "title": "اللغة الألمانية - ج1", "description": "الأساسيات وقواعد النطق.", "video_id": "JOLc4Jc9yFU" },
-                  { "id": 3002, "title": "اللغة الألمانية - ج2", "description": "الجراماتيك وتريكات الامتحانات.", "video_id": "L2irLAg7jHM" },
-                  { "id": 3003, "title": "اللغة الألمانية - ج3", "description": "المواقف الحياتية.", "video_id": "I-3VLcEoCP8" },
-                  { "id": 3004, "title": "اللغة الألمانية - ج4", "description": "حل تدريبات شاملة.", "video_id": "oRopKQ63a-I" }
+                "folders": [
+                    {
+                        "id": "f3",
+                        "title": "كورس التأسيس والشرح",
+                        "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
+                        "videos": [
+                            { "title": "اللغة الألمانية - ج1", "desc": "الأساسيات وقواعد النطق.", "vid": "JOLc4Jc9yFU" },
+                            { "title": "اللغة الألمانية - ج2", "desc": "الجراماتيك وتريكات الامتحانات.", "vid": "L2irLAg7jHM" },
+                            { "title": "اللغة الألمانية - ج3", "desc": "المواقف الحياتية.", "vid": "I-3VLcEoCP8" },
+                            { "title": "اللغة الألمانية - ج4", "desc": "حل تدريبات شاملة.", "vid": "oRopKQ63a-I" }
+                        ]
+                    }
                 ]
               }
             ]
@@ -163,8 +214,15 @@
                 "id": 401,
                 "name": "سنيور ماجد فارس",
                 "image": "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
-                "courses": [
-                  { "id": 4001, "title": "شرح المنهج كاملاً", "description": "فيديو واحد فيه الخلاصة.", "video_id": "K9ZOydc1cqs" }
+                "folders": [
+                    {
+                        "id": "f4",
+                        "title": "المراجعة النهائية",
+                        "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
+                        "videos": [
+                             { "title": "شرح المنهج كاملاً", "desc": "فيديو واحد فيه الخلاصة.", "vid": "K9ZOydc1cqs" }
+                        ]
+                    }
                 ]
               }
             ]
@@ -172,20 +230,27 @@
         ];
 
         // ==========================================
-        // كود العرض (اللوجيك)
+        // 2. منطق العرض (4 مستويات)
         // ==========================================
 
         const contentArea = document.getElementById('contentArea');
         const sectionTitle = document.getElementById('sectionTitle');
         const backBtn = document.getElementById('backBtn');
         
-        let currentLevel = 'subjects'; 
-        let currentSubjectIndex = null;
+        // المتغيرات دي عشان نحفظ إحنا واقفين فين
+        let state = {
+            level: 'subjects', // subjects, teachers, folders, videos
+            subjectIdx: null,
+            teacherIdx: null,
+            folderIdx: null
+        };
 
+        // 1. عرض المواد
         function showSubjects() {
-            currentLevel = 'subjects';
+            state.level = 'subjects';
             sectionTitle.innerText = "اختر المادة";
             backBtn.style.display = 'none';
+            contentArea.className = "grid-container"; // نرجع للشبكة
             contentArea.innerHTML = '';
 
             platformData.forEach((subject, index) => {
@@ -201,23 +266,22 @@
             });
         }
 
-        function showTeachers(subjectIndex) {
-            currentLevel = 'teachers';
-            currentSubjectIndex = subjectIndex;
-            const subject = platformData[subjectIndex];
+        // 2. عرض المدرسين
+        function showTeachers(idx) {
+            state.level = 'teachers';
+            state.subjectIdx = idx;
+            const subject = platformData[idx];
             
             sectionTitle.innerText = `مدرسين مادة ${subject.name}`;
             backBtn.style.display = 'inline-block';
+            contentArea.className = "grid-container";
             contentArea.innerHTML = '';
 
-            if(subject.teachers.length === 0) {
-                contentArea.innerHTML = '<p>لا يوجد مدرسين حالياً.</p>';
-                return;
-            }
+            if(subject.teachers.length === 0) contentArea.innerHTML = '<p>لا يوجد بيانات.</p>';
 
             subject.teachers.forEach((teacher, tIndex) => {
                 contentArea.innerHTML += `
-                    <div class="card" onclick="showCourses(${subjectIndex}, ${tIndex})">
+                    <div class="card" onclick="showFolders(${tIndex})">
                         <img src="${teacher.image}" class="card-img" alt="${teacher.name}">
                         <div class="card-body">
                             <div class="card-title">${teacher.name}</div>
@@ -228,53 +292,86 @@
             });
         }
 
-        function showCourses(subjectIndex, teacherIndex) {
-            currentLevel = 'courses';
-            const teacher = platformData[subjectIndex].teachers[teacherIndex];
+        // 3. عرض المجلدات (الكورسات) - الخطوة الجديدة
+        function showFolders(tIndex) {
+            state.level = 'folders';
+            state.teacherIdx = tIndex;
+            const teacher = platformData[state.subjectIdx].teachers[tIndex];
+            
             sectionTitle.innerText = `كورسات: ${teacher.name}`;
+            contentArea.className = "grid-container";
             contentArea.innerHTML = '';
 
-            if(teacher.courses.length === 0) {
-                contentArea.innerHTML = '<p>لا يوجد فيديوهات حالياً.</p>';
+            if(!teacher.folders || teacher.folders.length === 0) {
+                contentArea.innerHTML = '<p>لا يوجد كورسات حالياً.</p>';
                 return;
             }
 
-            teacher.courses.forEach(course => {
+            teacher.folders.forEach((folder, fIndex) => {
                 contentArea.innerHTML += `
-                    <div class="card video-card">
-                        <div class="plyr__video-embed" id="player-${course.id}">
+                    <div class="card folder-card" onclick="showVideos(${fIndex})">
+                        <img src="${folder.image}" class="card-img" alt="Folder">
+                        <div class="card-body">
+                            <div class="card-title">${folder.title}</div>
+                            <div class="card-desc">${folder.videos.length} فيديوهات</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 4. عرض الفيديوهات (المشغل)
+        function showVideos(fIndex) {
+            state.level = 'videos';
+            state.folderIdx = fIndex;
+            const folder = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[fIndex];
+            
+            sectionTitle.innerText = folder.title;
+            // بنلغي ال Grid هنا عشان الفيديوهات تيجي تحت بعض بشكل قائمة كبيرة
+            contentArea.className = ""; 
+            contentArea.innerHTML = '';
+
+            folder.videos.forEach((video, vIndex) => {
+                // لاحظ إعدادات الرابط هنا لتقليل ظهور يوتيوب
+                contentArea.innerHTML += `
+                    <div class="video-wrapper">
+                        <div class="plyr__video-embed" id="player-${vIndex}">
                             <iframe
-                                src="https://www.youtube.com/embed/${course.video_id}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+                                src="https://www.youtube.com/embed/${video.vid}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
                                 allowfullscreen
                                 allowtransparency
                                 allow="autoplay"
                             ></iframe>
                         </div>
-                        <div class="card-body">
-                            <div class="card-title">${course.title}</div>
-                            <div class="card-desc">${course.description}</div>
+                        <div class="video-info">
+                            <div class="video-title">🎥 ${video.title}</div>
+                            <div style="color:#666;">${video.desc}</div>
                         </div>
                     </div>
                 `;
             });
 
-            const players = Plyr.setup('.plyr__video-embed', {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-                hideControls: true,
+            // تفعيل المشغل
+            Plyr.setup('.plyr__video-embed', {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+                youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1 }
             });
         }
 
+        // زرار الرجوع الذكي
         function goBack() {
-            if (currentLevel === 'courses') {
-                showTeachers(currentSubjectIndex);
-            } else if (currentLevel === 'teachers') {
+            if (state.level === 'videos') {
+                showFolders(state.teacherIdx);
+            } else if (state.level === 'folders') {
+                showTeachers(state.subjectIdx);
+            } else if (state.level === 'teachers') {
                 showSubjects();
             }
         }
 
+        // البداية
         showSubjects();
 
     </script>
 </body>
-    </html>
-    
+</html>
