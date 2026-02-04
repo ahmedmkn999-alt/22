@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة Full Mark | Player Hub</title>
+    <style>
+        :root {
+            --main-color: #2563eb;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 { margin: 0; color: var(--main-color); }
+        
+        /* زرار الرجوع */
+        #backBtn {
+            display: none; /* مخفي في البداية */
+            background-color: #e5e7eb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        #backBtn:hover { background-color: #d1d5db; }
+
+        /* الشبكة (Grid) للعرض */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding-bottom: 50px;
+        }
+
+        /* تصميم الكارت */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-body {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* تصميم مشغل الفيديو */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-card {
+            cursor: default; /* الكارت بتاع الفيديو مش بيتداس عليه كله */
+        }
+        .video-card:hover { transform: none; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎓 Full Mark Platform</h1>
+    </header>
+
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <button id="backBtn" onclick="goBack()">🔙 رجوع</button>
+        <h2 id="sectionTitle">اختر المادة</h2>
+        <div id="contentArea" class="grid-container">
+            </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. قاعدة البيانات (JSON Data)
+        // ==========================================
+        const platformData = [
+          {
+            "id": 1,
+            "name": "الفرنساوي",
+            "image": "https://drive.google.com/uc?export=view&id=1eaT_568MiRvpWE2r1BxQlIQ6i3XFKWNH",
+            "teachers": [
+              {
+                "id": 101,
+                "name": "مسيو انس السعيد",
+                "image": "https://drive.google.com/uc?export=view&id=1BbfYT3HO1PXka2lTWpZLf-fbmVQVphyh",
+                "courses": [
+                  { "id": 1001, "title": "جزء واحد تالتة ثانوي", "description": "بداية المنهج والقواعد الأساسية.", "video_url": "https://www.youtube.com/embed/3PC1fxpp-Xk", "thumbnail": "https://img.youtube.com/vi/3PC1fxpp-Xk/maxresdefault.jpg" },
+                  { "id": 1002, "title": "جزء اتنين تالتة ثانوي", "description": "استكمال الشرح والتدريبات.", "video_url": "https://www.youtube.com/embed/fVJTHj5YW7Y", "thumbnail": "https://img.youtube.com/vi/fVJTHj5YW7Y/maxresdefault.jpg" },
+                  { "id": 1003, "title": "جزء تلاتة تالتة ثانوي", "description": "شرح متقدم وملاحظات هامة.", "video_url": "https://www.youtube.com/embed/Afx9AHypc7M", "thumbnail": "https://img.youtube.com/vi/Afx9AHypc7M/maxresdefault.jpg" },
+                  { "id": 1004, "title": "الجزء الاخير تالتة ثانوي", "description": "ختام المنهج والمراجعة.", "video_url": "https://www.youtube.com/embed/6s_TWiP1KgQ", "thumbnail": "https://img.youtube.com/vi/6s_TWiP1KgQ/maxresdefault.jpg" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "name": "الإيطالي",
+            "image": "https://drive.google.com/uc?export=view&id=13UWkwfG-hrFFpBZvnsuSzqaZP-0I1KFa",
+            "teachers": [
+              {
+                "id": 201,
+                "name": "سنيور مدحت غانم",
+                "image": "https://drive.google.com/uc?export=view&id=1Khj4-GsrBQiwylSjK_K8fL0ssKx9nB5K",
+                "courses": [
+                  { "id": 2001, "title": "الإنقاذ: منهج الإيطالي كاملاً", "description": "المنهج كله في 5 ساعات بس.", "video_url": "https://www.youtube.com/embed/T6hpZH5AMnk", "thumbnail": "https://img.youtube.com/vi/T6hpZH5AMnk/maxresdefault.jpg" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "name": "الألماني",
+            "image": "https://drive.google.com/uc?export=view&id=1OgKm7oBIMxqySlFrvvlFUQfqRUYw-Cra",
+            "teachers": [
+              {
+                "id": 301,
+                "name": "هير ياسين ابو الزيد",
+                "image": "https://drive.google.com/uc?export=view&id=1rBiSJiaQ0tBu1a25JsdpmNKlsasUwm0U",
+                "courses": [
+                  { "id": 3001, "title": "اللغة الألمانية - ج1", "description": "الأساسيات وقواعد النطق.", "video_url": "https://www.youtube.com/embed/JOLc4Jc9yFU", "thumbnail": "https://img.youtube.com/vi/JOLc4Jc9yFU/maxresdefault.jpg" },
+                  { "id": 3002, "title": "اللغة الألمانية - ج2", "description": "الجراماتيك وتريكات الامتحانات.", "video_url": "https://www.youtube.com/embed/L2irLAg7jHM", "thumbnail": "https://img.youtube.com/vi/L2irLAg7jHM/maxresdefault.jpg" },
+                  { "id": 3003, "title": "اللغة الألمانية - ج3", "description": "المواقف الحياتية.", "video_url": "https://www.youtube.com/embed/I-3VLcEoCP8", "thumbnail": "https://img.youtube.com/vi/I-3VLcEoCP8/maxresdefault.jpg" },
+                  { "id": 3004, "title": "اللغة الألمانية - ج4", "description": "حل تدريبات شاملة.", "video_url": "https://www.youtube.com/embed/oRopKQ63a-I", "thumbnail": "https://img.youtube.com/vi/oRopKQ63a-I/maxresdefault.jpg" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "name": "الإسباني",
+            "image": "https://drive.google.com/uc?export=view&id=1ysyd0XyK_WIqq-FNC55IOULpRyp_5wkI",
+            "teachers": [
+              {
+                "id": 401,
+                "name": "سنيور ماجد فارس",
+                "image": "https://drive.google.com/uc?export=view&id=1wNa11MxJbDOiY5VNRXD-6sKIVoROvYXY",
+                "courses": [
+                  { "id": 4001, "title": "شرح المنهج كاملاً", "description": "فيديو واحد فيه الخلاصة.", "video_url": "https://www.youtube.com/embed/K9ZOydc1cqs", "thumbnail": "https://img.youtube.com/vi/K9ZOydc1cqs/maxresdefault.jpg" }
+                ]
+              }
+            ]
+          }
+        ];
+
+        // ==========================================
+        // 2. منطق العرض (Render Logic)
+        // ==========================================
+        
+        const contentArea = document.getElementById('contentArea');
+        const sectionTitle = document.getElementById('sectionTitle');
+        const backBtn = document.getElementById('backBtn');
+        
+        let currentLevel = 'subjects'; // subjects, teachers, courses
+        let currentSubjectIndex = null;
+
+        // دالة لعرض المواد (الصفحة الرئيسية)
+        function showSubjects() {
+            currentLevel = 'subjects';
+            sectionTitle.innerText = "اختر المادة";
+            backBtn.style.display = 'none';
+            contentArea.innerHTML = '';
+
+            platformData.forEach((subject, index) => {
+                contentArea.innerHTML += `
+                    <div class="card" onclick="showTeachers(${index})">
+                        <img src="${subject.image}" class="card-img" alt="${subject.name}">
+                        <div class="card-body">
+                            <div class="card-title">${subject.name}</div>
+                            <div class="card-desc">اضغط لعرض المدرسين</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // دالة لعرض المدرسين
+        function showTeachers(subjectIndex) {
+            currentLevel = 'teachers';
+            currentSubjectIndex = subjectIndex;
+            const subject = platformData[subjectIndex];
+            
+            sectionTitle.innerText = `مدرسين مادة ${subject.name}`;
+            backBtn.style.display = 'inline-block';
+            contentArea.innerHTML = '';
+
+            if(subject.teachers.length === 0) {
+                contentArea.innerHTML = '<p>لا يوجد مدرسين حالياً.</p>';
+                return;
+            }
+
+            subject.teachers.forEach((teacher, tIndex) => {
+                contentArea.innerHTML += `
+                    <div class="card" onclick="showCourses(${subjectIndex}, ${tIndex})">
+                        <img src="${teacher.image}" class="card-img" alt="${teacher.name}">
+                        <div class="card-body">
+                            <div class="card-title">${teacher.name}</div>
+                            <div class="card-desc">اضغط لعرض الكورسات</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // دالة لعرض الكورسات (الفيديوهات)
+        function showCourses(subjectIndex, teacherIndex) {
+            currentLevel = 'courses';
+            const teacher = platformData[subjectIndex].teachers[teacherIndex];
+            
+            sectionTitle.innerText = `كورسات: ${teacher.name}`;
+            contentArea.innerHTML = '';
+
+            if(teacher.courses.length === 0) {
+                contentArea.innerHTML = '<p>لا يوجد فيديوهات حالياً.</p>';
+                return;
+            }
+
+            teacher.courses.forEach(course => {
+                contentArea.innerHTML += `
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="${course.video_url}" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">${course.title}</div>
+                            <div class="card-desc">${course.description}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // زرار الرجوع
+        function goBack() {
+            if (currentLevel === 'courses') {
+                showTeachers(currentSubjectIndex);
+            } else if (currentLevel === 'teachers') {
+                showSubjects();
+            }
+        }
+
+        // التشغيل المبدئي
+        showSubjects();
+
+    </script>
+</body>
+</html>
