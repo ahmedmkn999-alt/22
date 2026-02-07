@@ -31,19 +31,16 @@
             box-shadow: 0 0 50px rgba(0, 225, 255, 0.2); backdrop-filter: blur(10px);
         }
         .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main); }
-        
         .login-input {
             width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
             border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; margin-bottom: 20px;
         }
         .login-input:focus { border-color: var(--main); }
-        
         .login-btn {
             width: 100%; padding: 15px; background: var(--main); color: #000; border: none; 
             border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.2s;
         }
         .login-btn:active { transform: scale(0.95); background: #fff; }
-        
         .error-msg { color: #ff3333; margin-top: 15px; font-weight: bold; display: none; }
 
         /* --- شاشة الترحيب --- */
@@ -111,6 +108,11 @@
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
         .modal-content { background: #0f121a; border: 1px solid var(--main); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
         .close { position: absolute; top: 15px; left: 15px; color: #fff; font-size: 22px; cursor: pointer; }
+        .chat-box { height: 300px; overflow-y: auto; background: #000; padding: 10px; margin-bottom: 10px; border-radius: 10px; text-align: right; }
+        .msg { background: #333; padding: 5px 10px; border-radius: 10px; margin-bottom: 5px; display: inline-block; }
+        .msg.me { background: var(--main); color: #000; }
+        .timer { font-family: monospace; font-size: 1.2rem; margin-top: 10px; color: #fff; }
+        .empty-msg { text-align: center; color: #777; margin-top: 50px; font-size: 1.2rem; border: 1px dashed #333; padding: 20px; border-radius: 10px; grid-column: 1/-1; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -120,9 +122,8 @@
             <div class="login-logo">Full Mark Two</div>
             <p style="color:#888; margin-bottom:20px;">أدخل كود الطالب</p>
             <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
-            <button id="loginBtn" class="login-btn" onclick="checkCode()">دخول</button>
+            <button class="login-btn" onclick="checkCode()">دخول</button>
             <div id="loginMsg" class="error-msg"></div>
-            <p style="color:#555; font-size:0.8rem; margin-top:10px;">كود التجربة: 123456</p>
         </div>
     </div>
 
@@ -136,6 +137,7 @@
         <header>
             <div class="logo-text">Full Mark Two</div>
             <div class="header-icons">
+                <div class="icon-btn" onclick="openSupport()"><i class="fas fa-headset"></i></div>
                 <div class="icon-btn" onclick="openProfile()"><i class="fas fa-user"></i></div>
                 <div class="icon-btn logout-btn" onclick="logout()"><i class="fas fa-power-off"></i></div>
             </div>
@@ -150,201 +152,159 @@
         </div>
     </div>
 
-    <div id="profileModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('profileModal')">&times;</span>
-            <h3 style="color:var(--main)">الملف الشخصي</h3>
-            <div id="pName" style="font-size:1.5rem; font-weight:bold; margin:10px 0;">...</div>
-            <div id="pCode" style="color:#888; font-family:monospace;">...</div>
-        </div>
-    </div>
+    <div id="profileModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('profileModal')">&times;</span><h3 style="color:var(--main)">الملف الشخصي</h3><div id="pName" style="font-size:1.5rem;margin:10px 0">...</div><div id="pCode" style="color:#888;font-family:monospace">...</div></div></div>
+    <div id="supportModal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('supportModal')">&times;</span><h3>الدعم الفني</h3><div class="chat-box" id="chatBody"></div><div style="display:flex;gap:5px"><input type="text" id="chatInput" style="flex:1;padding:10px;border-radius:5px;border:none" placeholder="رسالتك..."><button onclick="sendMsg()" style="padding:10px;background:var(--main);border:none;border-radius:5px">إرسال</button></div></div></div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // ==========================================
-        // 🔐 (قائمة الطلاب) ضيف أكوادك هنا
-        // ==========================================
-        const ALLOWED_CODES = {
-            "123456": "زائر تجريبي",
-            "100200": "أحمد محمد",
-            "202620": "طالب ثانوية",
-            // "الكود": "الاسم",
-        };
+        // إعدادات الفايربيز
+        const firebaseConfig = { apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds", authDomain: "full-mark-8d434.firebaseapp.com", projectId: "full-mark-8d434", storageBucket: "full-mark-8d434.firebasestorage.app", messagingSenderId: "802579483999", appId: "1:802579483999:web:cf73136ffbd75d5e0ebaea" };
+        firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
 
-        // --- نظام الدخول ---
+        // --- 1. نظام الدخول (متصل بالفايربيز) ---
         let countTimer;
 
         window.onload = function() {
+            document.body.style.overflow = "auto";
             const savedUser = localStorage.getItem('fullmark_user');
-            if(savedUser && ALLOWED_CODES[savedUser]) {
-                startCountdown();
-            } else {
-                document.getElementById('loginSection').style.display = 'flex';
-            }
+            if(savedUser) { startCountdown(); } else { document.getElementById('loginSection').style.display = 'flex'; }
         };
 
         function checkCode() {
             const code = document.getElementById('codeParams').value.trim();
             const msg = document.getElementById('loginMsg');
-            const btn = document.getElementById('loginBtn');
+            const btn = document.querySelector('.login-btn');
 
             if(!code) { msg.innerText = "اكتب الكود!"; msg.style.display = 'block'; return; }
             
             btn.innerText = "جاري التحقق...";
+            
+            // كود التجربة عشانك انت بس (Dev Mode)
+            if(code === '123456') {
+                localStorage.setItem('fullmark_user', code); startCountdown(); return;
+            }
 
-            // تأخير بسيط عشان يبان كأنه بيحمل (محاكاة)
-            setTimeout(() => {
-                if(ALLOWED_CODES[code]) {
+            // البحث في الفايربيز
+            db.collection('codes').where('code', '==', code).get()
+            .then(snap => {
+                if(snap.empty) {
+                    msg.innerText = "❌ الكود غير صحيح!"; msg.style.display = 'block'; btn.innerText = "دخول";
+                } else {
                     localStorage.setItem('fullmark_user', code);
                     startCountdown();
-                } else {
-                    msg.innerText = "❌ الكود غير صحيح!";
-                    msg.style.display = 'block';
-                    btn.innerText = "دخول";
                 }
-            }, 500);
+            })
+            .catch(e => {
+                msg.innerText = "⚠️ خطأ في الاتصال بالسيرفر"; msg.style.display = 'block'; btn.innerText = "دخول";
+            });
         }
 
         function startCountdown() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('welcomeSection').style.display = 'flex';
-            
             let count = 5;
             const el = document.getElementById('counter');
             el.innerText = count;
-
             countTimer = setInterval(() => {
-                count--;
-                el.innerText = count;
+                count--; el.innerText = count;
                 if(count <= 0) {
                     clearInterval(countTimer);
                     document.getElementById('welcomeSection').style.display = 'none';
                     document.getElementById('platformSection').style.display = 'block';
-                    // تشغيل المنصة فوراً
-                    renderSubjects();
+                    loadAndMerge(); 
                 }
             }, 1000);
         }
 
-        function cancelLogin() {
-            clearInterval(countTimer);
-            localStorage.removeItem('fullmark_user');
-            location.reload();
-        }
+        function cancelLogin() { clearInterval(countTimer); localStorage.removeItem('fullmark_user'); location.reload(); }
+        function logout() { localStorage.removeItem('fullmark_user'); location.reload(); }
 
-        function logout() {
-            localStorage.removeItem('fullmark_user');
-            location.reload();
-        }
-
-        // --- الداتا ---
+        // --- 2. الداتا الكاملة ---
         let platformData = [
-          {
-            "id": 1, "name": "الفرنساوي", "image": "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
-            "teachers": [
-              {
-                "id": 101, "name": "مسيو انس السعيد", "image": "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
-                "folders": [
-                  { "id": "f1", "title": "كورس شرح المنهج 2026", "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", "videos": [ { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج", "vid": "3PC1fxpp-Xk" }, { "title": "جزء اتنين", "desc": "استكمال الشرح", "vid": "fVJTHj5YW7Y" } ] }
+            {
+                name: "اللغة العربية", img: "https://i.postimg.cc/L6xvnk5X/mn-awl-mn-tklm-allght-alʿrbyt.jpg",
+                teachers: [{ name: "أ. محمد صلاح", img: "https://i.postimg.cc/ZRJy8gDR/FB-IMG-1770382315133.jpg", folders: [] }, { name: "أ. رضا الفاروق", img: "https://i.postimg.cc/c4Pg965p/1723904748-y-CL9UA.png", folders: [] }]
+            },
+            {
+                name: "اللغة الإنجليزية", img: "https://i.postimg.cc/TwvBCjry/characteristics-of-a-prestigious-language-school-1-1020x642-1.jpg",
+                teachers: [{ name: "عبقري لغة", img: "https://files.coursatk.online/images/content/cc3fbcdbba91a2ed893fa92228b089a50eeced1fa245.jpg", folders: [] }, { name: "شريف المصري", img: "https://i.postimg.cc/4nRGtCBW/loginbg.png", folders: [] }]
+            },
+            {
+                name: "الفيزياء", img: "https://i.postimg.cc/Z5RBj2mp/904.jpg",
+                teachers: [{ name: "محمد عبد المعبود", img: "https://i.postimg.cc/fRTXpkcm/FB_IMG_1770383335913.jpg", folders: [] }, { name: "مستر كيرلس", img: "https://i.postimg.cc/qR0pD6nd/FB-IMG-1770383231786.jpg", folders: [] }]
+            },
+            {
+                name: "الكيمياء", img: "https://static.vecteezy.com/system/resources/previews/014/472/954/original/chemistry-logo-template-illustration-free-vector.jpg",
+                teachers: [
+                    { name: "أ. محمد عبدالجواد", img: "https://files.coursatk.online/images/questions/23b4ebea27532d1d05b2f7de5f26e63add3e4ca8ffcd.jpg", folders: [] },
+                    { name: "خالد صقر", img: "https://i.postimg.cc/hGQ0Zfn9/teacher_Bflsmq_Qf.webp", folders: [] }
                 ]
-              }
-            ]
-          },
-          {
-            "id": 2, "name": "الإيطالي", "image": "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
-            "teachers": [ { "id": 201, "name": "سنيور مدحت غانم", "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg", "folders": [ { "id": "f2", "title": "مراجعات ليلة الامتحان", "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png", "videos": [ { "title": "الإنقاذ: المنهج كامل", "desc": "المنهج كله", "vid": "T6hpZH5AMnk" } ] } ] } ]
-          },
-          // تقدر تضيف باقي المواد هنا...
+            },
+            {
+                name: "الأحياء", img: "https://i.postimg.cc/cJjdZkVx/FB_IMG_1770384472698.jpg",
+                teachers: [{ name: "د.أحمد الجوهري", img: "https://files.coursatk.online/images/content/a47130a2b11a514a2dbb766013d8e9f24701aae245ee.jpg", folders: [] }, { name: "محمد أيمن", img: "https://i.postimg.cc/856NCBS7/profile_433b1d2b5e7bfd30bed5.png", folders: [] }]
+            },
+            {
+                name: "الرياضيات", img: "https://i.postimg.cc/yN0LYkGR/m-dah-alryadyat-alzamyt-fy-brytanya-ll-khd-balaqtsad-qdma.jpg",
+                teachers: [{ name: "م.احمد عصام", img: "https://i.postimg.cc/fyRCK5RJ/essam_dark.png", folders: [] }, { name: "م. لطفي زهران", img: "https://i.postimg.cc/sXywB3Fh/Lotfy_a940b4e08c6abf7a6821.png", folders: [] }]
+            },
+            {
+                name: "الجغرافيا", img: "https://files.coursatk.online/images/subjects/geography.png",
+                teachers: [{ name: "جمعة السيد", img: "https://files.coursatk.online/images/content/2b233a89685a724df18a65c7b2ba6a3263f2932b3e8a.jpg", folders: [] }, { name: "أحمد زهران", img: "https://files.coursatk.online/images/questions/5eab71b642c6672b9182be0d1dd887beb3c8d2b98cf2.jpg", folders: [] }]
+            },
+            {
+                name: "اللغات الثانية", img: "https://cdn-icons-png.flaticon.com/512/3898/3898082.png",
+                teachers: [
+                    { name: "فرنساوي (مسيو انس)", img: "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", folders: [
+                        { title: "كورس شرح المنهج 2026", image: "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", videos: [{title: "جزء واحد تالتة ثانوي", desc: "بداية المنهج", vid: "3PC1fxpp-Xk"}, {title: "جزء اتنين", desc: "استكمال", vid: "fVJTHj5YW7Y"}] }
+                    ]},
+                    { name: "ألماني (هير ياسين)", img: "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg", folders: [] },
+                    { name: "إيطالي (سنيور مدحت)", img: "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg", folders: [{ title: "مراجعات", image: "https://cdn-icons-png.flaticon.com/512/2921/2921226.png", videos: [{title: "المنهج كامل", desc: "5 ساعات", vid: "T6hpZH5AMnk"}] }] },
+                    { name: "إسباني (سنيور ماجد)", img: "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png", folders: [] }
+                ]
+            }
         ];
 
-        // --- العرض ---
+        async function loadAndMerge() {
+            try {
+                const snap = await db.collection('new_videos').get();
+                snap.forEach(doc => {
+                    const v = doc.data();
+                    let sub = platformData.find(s => s.name === v.subject);
+                    if(!sub) { sub = { name: v.subject, image: v.subImg || "https://cdn-icons-png.flaticon.com/512/2997/2997380.png", teachers: [] }; platformData.push(sub); }
+                    let teacher = sub.teachers.find(t => t.name === v.teacher);
+                    if(!teacher) { teacher = { name: v.teacher, image: v.techImg || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", folders: [] }; sub.teachers.push(teacher); }
+                    let folder = teacher.folders.find(f => f.title === v.course);
+                    if(!folder) { folder = { title: v.course, image: "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", videos: [] }; teacher.folders.push(folder); }
+                    folder.videos.push({ title: v.videoName, desc: "تمت إضافته حديثاً", vid: v.videoLink });
+                });
+                renderSubjects();
+            } catch(e) { console.log(e); renderSubjects(); }
+        }
+
+        // --- 3. العرض ---
         const contentArea = document.getElementById('contentArea');
         const sectionTitle = document.getElementById('sectionTitle');
         const backBtn = document.getElementById('backBtn');
         let state = { level: 'subjects', subjectIdx: null, teacherIdx: null, folderIdx: null };
 
         function renderSubjects() {
-            state.level = 'subjects';
-            sectionTitle.innerText = "اختر المادة";
-            backBtn.style.display = 'none';
-            contentArea.className = "grid-container";
+            state.level = 'subjects'; sectionTitle.innerText = "اختر المادة"; backBtn.style.display = 'none'; contentArea.className = "grid-container";
             contentArea.innerHTML = platformData.map((sub, i) => `
-                <div class="card" onclick="renderTeachers(${i})">
-                    <div class="card-img-container"><img src="${sub.image}" class="card-img"></div>
-                    <div class="card-body"><div class="card-title">${sub.name}</div></div>
-                </div>
+                <div class="card" onclick="renderTeachers(${i})"><div class="card-img-container"><img src="${sub.image}" class="card-img"></div><div class="card-body"><div class="card-title">${sub.name}</div></div></div>
             `).join('');
         }
 
         window.renderTeachers = function(idx) {
-            state.level = 'teachers'; state.subjectIdx = idx;
-            const sub = platformData[idx];
-            sectionTitle.innerText = sub.name;
-            backBtn.style.display = 'block';
+            state.level = 'teachers'; state.subjectIdx = idx; const sub = platformData[idx]; sectionTitle.innerText = sub.name; backBtn.style.display = 'block';
+            if(!sub.teachers || sub.teachers.length === 0) { contentArea.innerHTML = '<div class="empty-msg">قريباً</div>'; return; }
             contentArea.innerHTML = sub.teachers.map((t, i) => `
-                <div class="card" onclick="renderFolders(${i})">
-                    <div class="card-img-container"><img src="${t.image}" class="card-img"></div>
-                    <div class="card-body"><div class="card-title">${t.name}</div></div>
-                </div>
+                <div class="card" onclick="renderFolders(${i})"><div class="card-img-container"><img src="${t.image}" class="card-img"></div><div class="card-body"><div class="card-title">${t.name}</div></div></div>
             `).join('');
         }
 
-        window.renderFolders = function(idx) {
-            state.level = 'folders'; state.teacherIdx = idx;
-            const t = platformData[state.subjectIdx].teachers[idx];
-            sectionTitle.innerText = t.name;
-            contentArea.innerHTML = t.folders.map((f, i) => `
-                <div class="card folder-card" onclick="renderVideos(${i})">
-                    <div class="card-img-container"><img src="${f.image}" class="card-img"></div>
-                    <div class="card-body"><div class="card-title">${f.title}</div><div class="card-desc">${f.videos.length} فيديوهات</div></div>
-                </div>
-            `).join('');
-        }
-
-        window.renderVideos = function(idx) {
-            state.level = 'videos'; state.folderIdx = idx;
-            const f = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[idx];
-            sectionTitle.innerText = f.title;
-            contentArea.className = "video-list";
-            const userCode = localStorage.getItem('fullmark_user');
-
-            contentArea.innerHTML = f.videos.map((v, i) => `
-                <div class="video-wrapper">
-                    <div class="video-info">
-                        <div class="video-title">${v.title}</div>
-                        <div class="video-desc">${v.desc}</div>
-                    </div>
-                    <div class="plyr__video-embed" id="player-${i}">
-                        <iframe src="https://www.youtube.com/embed/${v.vid}?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
-                        <div class="watermark">${userCode}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            setTimeout(() => {
-                f.videos.forEach((v, i) => new Plyr(`#player-${i}`));
-            }, 500);
-        }
-
-        window.goBack = function() {
-            if (state.level === 'videos') renderFolders(state.teacherIdx);
-            else if (state.level === 'folders') renderTeachers(state.subjectIdx);
-            else if (state.level === 'teachers') renderSubjects();
-        }
-
-        function openModal(id){ document.getElementById(id).style.display='flex'; }
-        function closeModal(id){ document.getElementById(id).style.display='none'; }
-        
-        function openProfile() {
-            openModal('profileModal');
-            const code = localStorage.getItem('fullmark_user');
-            const name = ALLOWED_CODES[code] || "غير معروف";
-            document.getElementById('pName').innerText = name;
-            document.getElementById('pCode').innerText = code;
-        }
-    </script>
-</body>
-    </html>
-    
+        window.rend
