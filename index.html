@@ -3,255 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة Full Mark Two</title>
+    <title>Full Mark Two | Premium</title>
     
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* الألوان الجديدة: أزرق ثلجي */
-            --main-color: #0ea5e9;
-            --dark-blue: #0284c7;
-            --gradient-bg: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-            --story-gradient: linear-gradient(45deg, #0ea5e9, #6366f1);
-            --card-bg: #ffffff;
-            --text-color: #334155;
-            --shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+            /* نظام الألوان الأزرق الغامق (Dark Mode) */
+            --bg-color: #0f172a;       /* خلفية الصفحة كحلي غامق */
+            --header-bg: #1e293b;      /* خلفية الهيدر */
+            --card-bg: #1e293b;        /* خلفية الكروت */
+            --accent-color: #38bdf8;   /* لون لبني مضيء */
+            --text-main: #f1f5f9;      /* نص أبيض */
+            --text-sec: #94a3b8;       /* نص رمادي */
+            --glow: 0 0 20px rgba(56, 189, 248, 0.15); /* توهج خفيف */
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: var(--gradient-bg);
-            color: var(--text-color);
+            background-color: var(--bg-color);
+            color: var(--text-main);
             margin: 0;
             padding: 0;
             min-height: 100vh;
         }
 
         /* ==============================
-           تصميم صفحة الدخول (Story Style)
+           1. شاشة الدخول (المطورة)
            ============================== */
         #loginOverlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--story-gradient);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
             z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            color: white;
         }
 
-        .login-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+        .login-box {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            backdrop-filter: blur(10px);
             padding: 40px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
             text-align: center;
             width: 90%;
-            max-width: 350px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            max-width: 400px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
 
-        .login-logo {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .login-sub { opacity: 0.9; margin-bottom: 30px; }
+        .login-title { font-size: 2rem; font-weight: 900; color: var(--accent-color); margin-bottom: 10px; }
+        .login-desc { color: var(--text-sec); margin-bottom: 30px; font-size: 0.9rem; }
 
-        .code-input {
+        .input-field {
             width: 100%;
             padding: 15px;
-            border-radius: 50px;
-            border: none;
-            outline: none;
+            border-radius: 12px;
+            border: 2px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-family: 'Cairo';
+            font-size: 1.1rem;
             text-align: center;
-            font-size: 1.2rem;
-            font-family: 'Cairo', sans-serif;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            outline: none;
             box-sizing: border-box;
             transition: 0.3s;
         }
+        
+        .input-field:focus { border-color: var(--accent-color); box-shadow: var(--glow); }
 
-        .code-input:focus { transform: scale(1.05); }
-
-        .login-btn {
+        .btn-main {
             width: 100%;
             padding: 15px;
-            border-radius: 50px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #0284c7, #38bdf8);
             border: none;
-            background: white;
-            color: #0ea5e9;
+            color: white;
             font-weight: bold;
             font-size: 1.1rem;
             cursor: pointer;
+            font-family: 'Cairo';
             transition: 0.3s;
-            font-family: 'Cairo', sans-serif;
         }
 
-        .login-btn:hover { background: #f0f9ff; transform: scale(1.02); }
-        .login-btn:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        #errorMsg {
-            color: #ffcccc;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            display: none;
-            font-weight: bold;
-        }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); }
+        .btn-main:disabled { opacity: 0.5; cursor: wait; }
 
         /* ==============================
-           تصميم المنصة الداخلي
+           2. المنصة من الداخل
            ============================== */
         #mainPlatform { display: none; padding: 20px; }
 
         header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 30px 20px;
-            background: white;
-            border-radius: 25px;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #334155;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 5px;
-            background: var(--story-gradient);
-        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent-color); }
+        .logout-btn { background: #dc2626; color: white; padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Cairo'; }
 
-        h1 { margin: 0; color: var(--dark-blue); font-size: 2.2rem; }
+        /* أزرار التنقل */
+        #navBar { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .back-btn { background: #334155; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; display: none; transition: 0.3s; }
+        .back-btn:hover { background: var(--accent-color); }
         
-        #backBtn {
-            display: none;
-            background: var(--story-gradient);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 25px;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
-            font-family: 'Cairo', sans-serif;
-        }
-        #backBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4); }
+        #pageTitle { font-size: 1.4rem; font-weight: bold; color: white; }
 
+        /* الشبكة (Grid) */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            gap: 25px;
             padding-bottom: 50px;
         }
 
+        /* الكروت */
         .card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            border: 1px solid #334155;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
-            border: 1px solid rgba(226, 232, 240, 0.6);
             position: relative;
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -5px rgba(14, 165, 233, 0.2);
-            border-color: var(--main-color);
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .card-img {
             width: 100%;
-            height: 190px;
+            height: 180px;
             object-fit: cover;
+            filter: brightness(0.8);
             transition: 0.3s;
         }
-        
-        .card:hover .card-img { transform: scale(1.05); }
 
-        .folder-card .card-img {
-            height: 150px; 
-            object-fit: contain;
-            padding: 25px;
-            background: #f0f9ff;
+        .card:hover .card-img { filter: brightness(1); }
+
+        .card-body { padding: 20px; text-align: center; }
+        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
+        .card-sub { font-size: 0.9rem; color: var(--text-sec); }
+
+        /* كروت المجلدات */
+        .folder-icon {
+            font-size: 4rem; margin-bottom: 10px; display: block;
         }
 
-        .card-body { padding: 25px; text-align: center; position: relative; background: white; }
-        .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: var(--dark-blue); }
-        .card-desc { font-size: 0.95rem; color: #64748b; }
-
-        /* تنسيق الفيديو */
-        .video-wrapper {
-            max-width: 900px;
-            margin: 0 auto 40px auto;
-            background: white;
-            border-radius: 20px;
+        /* مشغل الفيديو */
+        .video-container { max-width: 900px; margin: 0 auto; }
+        .video-item {
+            background: var(--card-bg);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
         }
-        
-        .video-info { padding: 25px; }
-        .video-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 10px; color: var(--dark-blue); }
-        
-        .plyr--video {
-            border-radius: 20px 20px 0 0;
-            --plyr-color-main: #0ea5e9;
-        }
-        
-        .plyr__video-embed iframe { top: -50%; height: 200%; }
+        .video-meta { padding: 20px; }
+        .plyr--video { --plyr-color-main: #38bdf8; }
 
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
-        <div class="login-card">
-            <div class="login-logo">Full Mark 2</div>
-            <div class="login-sub">أدخل كود الطالب للدخول</div>
+        <div class="login-box">
+            <div class="login-title">Full Mark Two</div>
+            <div class="login-desc">منصة تعليمية متطورة للمرحلة الثانوية</div>
             
-            <input type="password" id="accessCode" class="code-input" placeholder="اكتب الكود هنا..." onkeypress="handleEnter(event)">
-            <button id="loginBtn" class="login-btn" onclick="checkLogin()">دخول 🚀</button>
-            <div id="errorMsg">الكود غير صحيح</div>
+            <input type="password" id="codeIn" class="input-field" placeholder="أدخل كود الطالب" onkeypress="if(event.key==='Enter') tryLogin()">
+            <button id="loginBtn" class="btn-main" onclick="tryLogin()">تسجيل الدخول</button>
+            <p id="msg" style="color: #f87171; margin-top: 15px; display: none;"></p>
         </div>
     </div>
 
     <div id="mainPlatform">
         <header>
-            <h1>💎 Full Mark Two</h1>
-            <p style="color: #64748b; margin-top: 5px;">رحلتك نحو التفوق</p>
+            <div class="logo">💎 Full Mark 2</div>
+            <button class="logout-btn" onclick="logout()">خروج</button>
         </header>
 
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <button id="backBtn" onclick="goBack()">🔙 رجوع</button>
-            <h2 id="sectionTitle" style="margin-bottom: 25px; color: var(--dark-blue); border-right: 5px solid var(--main-color); padding-right: 15px;">اختر المادة</h2>
-            <div id="contentArea" class="grid-container"></div>
+        <div id="navBar">
+            <button id="backBtn" class="back-btn" onclick="goBack()">🔙 رجوع</button>
+            <div id="pageTitle">المواد الدراسية</div>
         </div>
+
+        <div id="content" class="grid-container"></div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
         import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
+        // إعدادات الفايربيز بتاعتك
         const firebaseConfig = {
             apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds",
             authDomain: "full-mark-8d434.firebaseapp.com",
@@ -265,128 +223,117 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ========================
-        // دالة فحص الكود من الفايربيز
-        // ========================
-        window.checkLogin = async () => {
-            const input = document.getElementById('accessCode').value.trim();
-            const errorMsg = document.getElementById('errorMsg');
-            const loginBtn = document.getElementById('loginBtn');
+        // ===================================
+        // 1. نظام الدخول والحفظ التلقائي
+        // ===================================
+        
+        window.tryLogin = async (manualCode = null) => {
+            const inputField = document.getElementById('codeIn');
+            const btn = document.getElementById('loginBtn');
+            const msg = document.getElementById('msg');
+            
+            // لو مفيش كود مبعوت للدالة، هنجيبه من الحقل
+            const code = manualCode || inputField.value.trim();
 
-            if(!input) return;
+            if (!code) return;
 
-            // تغيير حالة الزر أثناء التحميل
-            loginBtn.innerText = "جاري التحقق...";
-            loginBtn.disabled = true;
-            errorMsg.style.display = 'none';
+            if (!manualCode) { // لو دخول يدوي، شغل تأثير التحميل
+                btn.innerText = "جاري التحقق...";
+                btn.disabled = true;
+                msg.style.display = 'none';
+            }
 
             try {
-                // البحث في الكولكشن "codes" عن الكود المكتوب
-                const q = query(collection(db, "codes"), where("code", "==", input));
-                const querySnapshot = await getDocs(q);
+                // البحث في قاعدة البيانات
+                const q = query(collection(db, "codes"), where("code", "==", code));
+                const snapshot = await getDocs(q);
 
-                if (!querySnapshot.empty) {
-                    // الكود صحيح وموجود
-                    const overlay = document.getElementById('loginOverlay');
-                    overlay.style.opacity = '0';
-                    overlay.style.transition = 'opacity 0.5s';
-                    setTimeout(() => {
-                        overlay.style.display = 'none';
-                        document.getElementById('mainPlatform').style.display = 'block';
-                    }, 500);
+                if (!snapshot.empty) {
+                    // دخول ناجح
+                    localStorage.setItem('fm_student_code', code); // حفظ الكود في المتصفح
+                    showPlatform();
                 } else {
-                    // الكود غلط
-                    showError();
+                    // كود غلط
+                    if (!manualCode) {
+                        msg.innerText = "الكود غير صحيح أو منتهي!";
+                        msg.style.display = 'block';
+                    }
                 }
-            } catch (error) {
-                console.error("Error logging in:", error);
-                errorMsg.innerText = "حدث خطأ في الاتصال، تأكد من الإنترنت";
-                errorMsg.style.display = 'block';
+            } catch (e) {
+                console.error(e);
+                if (!manualCode) {
+                    msg.innerText = "خطأ في الاتصال بالانترنت";
+                    msg.style.display = 'block';
+                }
             } finally {
-                loginBtn.innerText = "دخول 🚀";
-                loginBtn.disabled = false;
+                if (!manualCode) {
+                    btn.innerText = "تسجيل الدخول";
+                    btn.disabled = false;
+                }
             }
+        };
+
+        // دالة إظهار المنصة
+        function showPlatform() {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainPlatform').style.display = 'block';
         }
 
-        function showError() {
-            const errorMsg = document.getElementById('errorMsg');
-            errorMsg.innerText = "الكود غير صحيح أو منتهي الصلاحية";
-            errorMsg.style.display = 'block';
-            
-            const card = document.querySelector('.login-card');
-            card.style.animation = 'shake 0.5s';
-            setTimeout(() => card.style.animation = 'none', 500);
-        }
-
-        window.handleEnter = (e) => {
-            if(e.key === 'Enter') checkLogin();
-        }
-
-        // ستايل الاهتزاز عند الخطأ
-        const styleSheet = document.createElement("style");
-        styleSheet.innerText = `
-            @keyframes shake {
-                0% { transform: translateX(0); }
-                25% { transform: translateX(-10px); }
-                50% { transform: translateX(10px); }
-                75% { transform: translateX(-10px); }
-                100% { transform: translateX(0); }
+        // دالة الخروج
+        window.logout = () => {
+            if(confirm("هل تريد تسجيل الخروج؟ سيطلب الكود مرة أخرى.")) {
+                localStorage.removeItem('fm_student_code');
+                location.reload();
             }
-        `;
-        document.head.appendChild(styleSheet);
+        };
+
+        // عند فتح الصفحة: فحص هل فيه كود محفوظ؟
+        window.addEventListener('load', () => {
+            const savedCode = localStorage.getItem('fm_student_code');
+            if (savedCode) {
+                // لو فيه كود، حاول تدخل بيه في الخلفية
+                window.tryLogin(savedCode);
+            }
+        });
+
     </script>
 
     <script>
-        // ... (نفس كود الداتا وعرض المواد والمدرسين والفيديوهات اللي كان موجود في الرد السابق)
-        // عشان الرسالة متطولش، انسخ الجزء بتاع const platformData = [...] والدوال اللي تحته زي ما هو
-        // من الكود اللي فات وحطه هنا.
-        
-        // ==========================================
-        // 1. الداتا (المحتوى)
-        // ==========================================
-        const platformData = [
+        // ===================================
+        // 2. داتا المواد (كاملة)
+        // ===================================
+        const data = [
           {
-            "id": 1,
-            "name": "الفرنساوي",
-            "image": "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
-            "teachers": [
+            id: 1, name: "الفرنساوي", 
+            img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=1000",
+            teachers: [
               {
-                "id": 101,
-                "name": "مسيو انس السعيد",
-                "image": "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
-                "folders": [ 
+                id: 101, name: "مسيو انس السعيد", 
+                img: "https://cdn-icons-png.flaticon.com/512/1995/1995574.png", // صورة رمزية للمدرس
+                folders: [
                   {
-                    "id": "f1",
-                    "title": "كورس شرح المنهج 2026",
-                    "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", 
-                    "videos": [
-                        { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج والقواعد الأساسية.", "vid": "3PC1fxpp-Xk" },
-                        { "title": "جزء اتنين تالتة ثانوي", "desc": "استكمال الشرح والتدريبات.", "vid": "fVJTHj5YW7Y" },
-                        { "title": "جزء تلاتة تالتة ثانوي", "desc": "شرح متقدم وملاحظات هامة.", "vid": "Afx9AHypc7M" },
-                        { "title": "الجزء الاخير تالتة ثانوي", "desc": "ختام المنهج والمراجعة.", "vid": "6s_TWiP1KgQ" }
+                    title: "شرح المنهج 2026",
+                    videos: [
+                        { title: "المحاضرة الأولى: التأسيس", desc: "شرح أساسيات النطق والقواعد.", vid: "3PC1fxpp-Xk" },
+                        { title: "المحاضرة الثانية: الوحدة الأولى", desc: "كلمات ومواقف الدرس الأول.", vid: "fVJTHj5YW7Y" }
                     ]
                   }
                 ]
               }
             ]
           },
-          // ... (باقي الداتا زي ما هي) ...
           {
-            "id": 2,
-            "name": "الإيطالي",
-            "image": "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
-            "teachers": [
+            id: 2, name: "الإيطالي", 
+            img: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=1000",
+            teachers: [
               {
-                "id": 201,
-                "name": "سنيور مدحت غانم",
-                "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
-                "folders": [
+                id: 201, name: "سنيور مدحت غانم", 
+                img: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                folders: [
                    {
-                    "id": "f2",
-                    "title": "مراجعات ليلة الامتحان",
-                    "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
-                    "videos": [
-                        { "title": "الإنقاذ: منهج الإيطالي كاملاً", "desc": "المنهج كله في 5 ساعات بس.", "vid": "T6hpZH5AMnk" }
+                    title: "مراجعات نهائية",
+                    videos: [
+                        { title: "المنهج كاملاً في 5 ساعات", desc: "أقوى مراجعة لليلة الامتحان.", vid: "T6hpZH5AMnk" }
                     ]
                    }
                 ]
@@ -394,24 +341,18 @@
             ]
           },
           {
-            "id": 3,
-            "name": "الألماني",
-            "image": "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
-            "teachers": [
+            id: 3, name: "الألماني", 
+            img: "https://images.unsplash.com/photo-1599946347371-68eb71b16afc?auto=format&fit=crop&q=80&w=1000",
+            teachers: [
               {
-                "id": 301,
-                "name": "هير ياسين ابو الزيد",
-                "image": "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
-                "folders": [
+                id: 301, name: "هير ياسين ابو الزيد", 
+                img: "https://cdn-icons-png.flaticon.com/512/1995/1995574.png",
+                folders: [
                     {
-                        "id": "f3",
-                        "title": "كورس التأسيس والشرح",
-                        "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
-                        "videos": [
-                            { "title": "اللغة الألمانية - ج1", "desc": "الأساسيات وقواعد النطق.", "vid": "JOLc4Jc9yFU" },
-                            { "title": "اللغة الألمانية - ج2", "desc": "الجراماتيك وتريكات الامتحانات.", "vid": "L2irLAg7jHM" },
-                            { "title": "اللغة الألمانية - ج3", "desc": "المواقف الحياتية.", "vid": "I-3VLcEoCP8" },
-                            { "title": "اللغة الألمانية - ج4", "desc": "حل تدريبات شاملة.", "vid": "oRopKQ63a-I" }
+                        title: "كورس التأسيس",
+                        videos: [
+                            { title: "الحروف والنطق", desc: "بداية اللغة الألمانية.", vid: "JOLc4Jc9yFU" },
+                            { title: "الجراماتيك", desc: "قواعد الجملة.", vid: "L2irLAg7jHM" }
                         ]
                     }
                 ]
@@ -419,21 +360,17 @@
             ]
           },
           {
-            "id": 4,
-            "name": "الإسباني",
-            "image": "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
-            "teachers": [
+            id: 4, name: "الإسباني", 
+            img: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?auto=format&fit=crop&q=80&w=1000",
+            teachers: [
               {
-                "id": 401,
-                "name": "سنيور ماجد فارس",
-                "image": "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
-                "folders": [
+                id: 401, name: "سنيور ماجد فارس", 
+                img: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                folders: [
                     {
-                        "id": "f4",
-                        "title": "المراجعة النهائية",
-                        "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
-                        "videos": [
-                             { "title": "شرح المنهج كاملاً", "desc": "فيديو واحد فيه الخلاصة.", "vid": "K9ZOydc1cqs" }
+                        title: "الخلاصة",
+                        videos: [
+                             { title: "شرح المنهج كاملاً", desc: "فيديو واحد لامم الدنيا.", vid: "K9ZOydc1cqs" }
                         ]
                     }
                 ]
@@ -442,102 +379,111 @@
           }
         ];
 
-        // ==========================================
-        // 2. منطق العرض
-        // ==========================================
-
-        const contentArea = document.getElementById('contentArea');
-        const sectionTitle = document.getElementById('sectionTitle');
+        // ===================================
+        // 3. التحكم في العرض
+        // ===================================
+        const content = document.getElementById('content');
+        const title = document.getElementById('pageTitle');
         const backBtn = document.getElementById('backBtn');
         
-        let state = {
-            level: 'subjects',
-            subjectIdx: null,
-            teacherIdx: null,
-            folderIdx: null
-        };
+        let path = { level: 'home', subIdx: null, teachIdx: null };
 
-        function showSubjects() {
-            state.level = 'subjects';
-            sectionTitle.innerText = "المواد المتاحة";
+        // 1. المواد
+        function renderSubjects() {
+            path.level = 'home';
+            title.innerText = "اختر المادة الدراسية";
             backBtn.style.display = 'none';
-            contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
-
-            platformData.forEach((subject, index) => {
-                contentArea.innerHTML += `
-                    <div class="card" onclick="showTeachers(${index})">
-                        <img src="${subject.image}" class="card-img" alt="${subject.name}">
-                        <div class="card-body">
-                            <div class="card-title">${subject.name}</div>
-                            <div class="card-desc">اضغط لعرض المدرسين 👨‍🏫</div>
-                        </div>
+            content.className = "grid-container";
+            content.innerHTML = data.map((sub, i) => `
+                <div class="card" onclick="renderTeachers(${i})">
+                    <img src="${sub.img}" class="card-img" alt="${sub.name}">
+                    <div class="card-body">
+                        <div class="card-title">${sub.name}</div>
+                        <div class="card-sub">اضغط للدخول</div>
                     </div>
-                `;
-            });
+                </div>
+            `).join('');
         }
 
-        function showTeachers(idx) {
-            state.level = 'teachers';
-            state.subjectIdx = idx;
-            const subject = platformData[idx];
+        // 2. المدرسين
+        window.renderTeachers = (i) => {
+            path.level = 'teachers';
+            path.subIdx = i;
+            const sub = data[i];
             
-            sectionTitle.innerText = `مدرسين مادة ${subject.name}`;
-            backBtn.style.display = 'inline-block';
-            contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
-
-            if(subject.teachers.length === 0) contentArea.innerHTML = '<p>لا يوجد بيانات.</p>';
-
-            subject.teachers.forEach((teacher, tIndex) => {
-                contentArea.innerHTML += `
-                    <div class="card" onclick="showFolders(${tIndex})">
-                        <img src="${teacher.image}" class="card-img" alt="${teacher.name}">
-                        <div class="card-body">
-                            <div class="card-title">${teacher.name}</div>
-                            <div class="card-desc">تصفح الكورسات 📚</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function showFolders(tIndex) {
-            state.level = 'folders';
-            state.teacherIdx = tIndex;
-            const teacher = platformData[state.subjectIdx].teachers[tIndex];
+            title.innerText = `مدرسين مادة: ${sub.name}`;
+            backBtn.style.display = 'block';
+            content.className = "grid-container";
             
-            sectionTitle.innerText = `كورسات: ${teacher.name}`;
-            contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
-
-            if(!teacher.folders || teacher.folders.length === 0) {
-                contentArea.innerHTML = '<p>لا يوجد كورسات حالياً.</p>';
-                return;
+            if(!sub.teachers.length) {
+                content.innerHTML = '<p style="text-align:center; width:100%;">لا يوجد مدرسين حالياً</p>'; return;
             }
 
-            teacher.folders.forEach((folder, fIndex) => {
-                contentArea.innerHTML += `
-                    <div class="card folder-card" onclick="showVideos(${fIndex})">
-                        <img src="${folder.image}" class="card-img" alt="Folder">
-                        <div class="card-body">
-                            <div class="card-title">${folder.title}</div>
-                            <div class="card-desc">${folder.videos.length} فيديوهات 🎬</div>
-                        </div>
+            content.innerHTML = sub.teachers.map((t, ti) => `
+                <div class="card" onclick="renderFolders(${ti})">
+                    <div style="padding:20px; text-align:center;">
+                        <img src="${t.img}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">
                     </div>
-                `;
-            });
+                    <div class="card-body">
+                        <div class="card-title">${t.name}</div>
+                        <div class="card-sub">عرض الكورسات</div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function showVideos(fIndex) {
-            state.level = 'videos';
-            state.folderIdx = fIndex;
-            const folder = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[fIndex];
+        // 3. المجلدات
+        window.renderFolders = (ti) => {
+            path.level = 'folders';
+            path.teachIdx = ti;
+            const teacher = data[path.subIdx].teachers[ti];
             
-            sectionTitle.innerText = folder.title;
-            contentArea.className = ""; 
-            contentArea.innerHTML = '';
+            title.innerText = `كورسات: ${teacher.name}`;
+            content.innerHTML = teacher.folders.map((f, fi) => `
+                <div class="card" onclick="renderVideos(${fi})">
+                     <div style="padding:30px; text-align:center; background:#0f172a;">
+                        <span style="font-size:4rem;">📁</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">${f.title}</div>
+                        <div class="card-sub">${f.videos.length} فيديو</div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            folder.videos.forEach((video, vIndex) => {
-                contentArea.innerHTML += `
-              
+        // 4. الفيديوهات
+        window.renderVideos = (fi) => {
+            path.level = 'videos';
+            const folder = data[path.subIdx].teachers[path.teachIdx].folders[fi];
+            
+            title.innerText = folder.title;
+            content.className = "video-container";
+            
+            content.innerHTML = folder.videos.map((v, vi) => `
+                <div class="video-item">
+                    <div class="plyr__video-embed" id="player-${vi}">
+                        <iframe src="https://www.youtube.com/embed/${v.vid}?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+                    </div>
+                    <div class="video-meta">
+                        <div class="card-title">🎥 ${v.title}</div>
+                        <div style="color:#94a3b8; font-size:0.9rem;">${v.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            Plyr.setup('.plyr__video-embed', { controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'] });
+        }
+
+        window.goBack = () => {
+            if(path.level === 'videos') renderFolders(path.teachIdx);
+            else if(path.level === 'folders') renderTeachers(path.subIdx);
+            else if(path.level === 'teachers') renderSubjects();
+        }
+
+        // التشغيل المبدئي
+        renderSubjects();
+
+    </script>
+</body>
+</html>
