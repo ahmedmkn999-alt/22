@@ -10,55 +10,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- الثيم الأزرق النيون --- */
-        :root {
-            --main-color: #00e1ff;
-            --bg-color: #02050a;
-            --card-bg: #0a0f18;
-            --text-color: #ffffff;
-        }
-
+        :root { --main: #00e1ff; --bg: #02050a; --card-bg: #0a0f18; --text: #fff; }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
-
-        body {
-            background: linear-gradient(135deg, #02050a 0%, #050a14 100%);
-            color: var(--text-color);
-            margin: 0; min-height: 100vh; overflow-x: hidden;
+        
+        body { 
+            background: linear-gradient(135deg, #02050a 0%, #050a14 100%); 
+            color: var(--text); min-height: 100vh; overflow-x: hidden; margin: 0; 
         }
 
         /* --- شاشة الدخول --- */
         #loginSection {
             height: 100vh; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #1a2332 0%, #000000 100%);
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 2000;
         }
         .login-card {
-            background: rgba(10, 15, 24, 0.95); border: 2px solid var(--main-color); padding: 40px; 
+            background: rgba(10, 15, 24, 0.95); border: 2px solid var(--main); padding: 40px; 
             border-radius: 20px; width: 90%; max-width: 400px; text-align: center;
             box-shadow: 0 0 50px rgba(0, 225, 255, 0.2); backdrop-filter: blur(10px);
         }
-        .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main-color); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main-color); }
+        .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main); }
+        
         .login-input {
             width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
             border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; margin-bottom: 20px;
         }
-        .login-input:focus { border-color: var(--main-color); box-shadow: 0 0 10px rgba(0, 225, 255, 0.3); }
+        .login-input:focus { border-color: var(--main); }
+        
         .login-btn {
-            width: 100%; padding: 15px; background: var(--main-color); color: #000; border: none; 
-            border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 15px; background: var(--main); color: #000; border: none; 
+            border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.2s;
         }
-        .login-btn:hover { background: #fff; box-shadow: 0 0 20px var(--main-color); }
+        .login-btn:active { transform: scale(0.95); background: #fff; }
+        
         .error-msg { color: #ff3333; margin-top: 15px; font-weight: bold; display: none; }
 
         /* --- شاشة الترحيب --- */
         #welcomeSection {
             display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center;
-            background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 9000;
+            background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 1999;
         }
         .counter-circle {
-            width: 120px; height: 120px; border: 5px solid var(--main-color); border-radius: 50%;
+            width: 120px; height: 120px; border: 5px solid var(--main); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 3.5rem; font-weight: bold; color: #fff; text-shadow: 0 0 20px var(--main-color);
+            font-size: 3.5rem; font-weight: bold; color: #fff; text-shadow: 0 0 20px var(--main);
             box-shadow: 0 0 30px rgba(0, 225, 255, 0.3); animation: pulse 1s infinite;
         }
         @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
@@ -69,70 +65,52 @@
 
         header {
             text-align: center; margin-bottom: 30px; padding-bottom: 20px;
-            border-bottom: 2px solid var(--main-color); position: relative;
+            border-bottom: 2px solid var(--main); position: relative;
             display: flex; justify-content: space-between; align-items: center;
         }
-
-        h1 { margin: 0; color: var(--main-color); font-size: 1.8rem; text-shadow: 0 0 15px var(--main-color); font-weight: 900; }
-        
+        .logo-text { color: var(--main); font-size: 1.8rem; text-shadow: 0 0 15px var(--main); font-weight: 900; }
         .header-icons { display: flex; gap: 10px; }
         .icon-btn { 
-            width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--main-color); 
-            display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; transition: 0.3s;
+            width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--main); 
+            display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer;
         }
-        .icon-btn:hover { background: var(--main-color); color: #000; }
         .logout-btn { border-color: #ff3333; color: #ff3333; }
-        .logout-btn:hover { background: #ff3333; color: #fff; }
 
+        .nav-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         #backBtn {
-            display: none; background-color: transparent; color: var(--main-color);
-            border: 2px solid var(--main-color); padding: 8px 25px; border-radius: 50px;
-            cursor: pointer; font-weight: bold; margin-bottom: 20px; transition: 0.3s;
+            display: none; background: transparent; color: var(--main);
+            border: 2px solid var(--main); padding: 5px 20px; border-radius: 50px;
+            cursor: pointer; font-weight: bold; transition: 0.3s;
         }
-        #backBtn:hover { background-color: var(--main-color); color: #000; }
+        #backBtn:hover { background-color: var(--main); color: #000; }
 
-        h2#sectionTitle { color: #fff; border-right: 4px solid var(--main-color); padding-right: 10px; margin-bottom: 20px; }
+        h2#sectionTitle { color: #fff; border-right: 4px solid var(--main); padding-right: 10px; margin: 0; }
 
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; padding-bottom: 50px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding-bottom: 50px; }
 
         .card {
             background-color: var(--card-bg); border-radius: 16px; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer; border: 1px solid rgba(0, 225, 255, 0.15);
+            border: 1px solid rgba(0, 225, 255, 0.15); transition: 0.3s; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .card:active { transform: scale(0.97); border-color: var(--main-color); }
-        
+        .card:active { transform: scale(0.97); border-color: var(--main); }
         .card-img-container { width: 100%; height: 160px; background: #000; display: flex; align-items: center; justify-content: center; padding: 10px; }
         .card-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
         .card-body { padding: 15px; text-align: center; }
-        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: #fff; }
-        .card-desc { font-size: 0.9rem; color: #888; }
+        .card-title { font-size: 1rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
+        .card-desc { font-size: 0.8rem; color: #888; }
 
-        /* الفيديو */
-        .video-wrapper {
-            max-width: 800px; margin: 0 auto 40px auto; background: #000;
-            border-radius: 16px; overflow: hidden; border: 1px solid #333;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); position: relative;
-        }
-        .video-info { padding: 20px; background: #111; border-bottom: 1px solid #333; }
-        .video-title { font-size: 1.2rem; font-weight: bold; color: var(--main-color); }
-        .watermark {
-            position: absolute; top: 10px; left: 10px; color: rgba(255,255,255,0.2); 
-            font-size: 1.5rem; font-weight: bold; z-index: 100; pointer-events: none;
-            animation: float 5s infinite alternate;
-        }
+        .video-list { display: flex; flex-direction: column; gap: 25px; }
+        .video-wrapper { background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; position: relative; }
+        .video-info { padding: 15px; background: #111; border-bottom: 1px solid #333; }
+        .video-title { font-size: 1.1rem; font-weight: bold; color: var(--main); }
+        .watermark { position: absolute; top: 20px; left: 20px; color: rgba(255,255,255,0.3); font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 100; animation: float 6s infinite alternate; }
         @keyframes float { 0% {top:10%;left:10%} 100% {top:80%;left:80%} }
 
         /* مودال */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
-        .modal-content { background: #0f121a; border: 1px solid var(--main-color); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
+        .modal-content { background: #0f121a; border: 1px solid var(--main); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
         .close { position: absolute; top: 15px; left: 15px; color: #fff; font-size: 22px; cursor: pointer; }
-        
-        .wa-btn {
-            display: block; background: #25D366; color: #fff; padding: 10px; margin-top: 15px; 
-            border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem;
-        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -141,10 +119,8 @@
         <div class="login-card">
             <div class="login-logo">Full Mark Two</div>
             <p style="color:#888; margin-bottom:20px;">أدخل كود الطالب</p>
-            <form onsubmit="event.preventDefault(); checkCode();">
-                <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
-                <button type="submit" class="login-btn">دخول</button>
-            </form>
+            <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
+            <button id="loginBtn" class="login-btn" onclick="checkCode()">دخول</button>
             <div id="loginMsg" class="error-msg"></div>
             <p style="color:#555; font-size:0.8rem; margin-top:10px;">كود التجربة: 123456</p>
         </div>
@@ -158,17 +134,18 @@
 
     <div id="platformSection">
         <header>
-            <h1>🎓 Full Mark Two</h1>
+            <div class="logo-text">Full Mark Two</div>
             <div class="header-icons">
-                <div class="icon-btn" onclick="openSupport()"><i class="fas fa-headset"></i></div>
                 <div class="icon-btn" onclick="openProfile()"><i class="fas fa-user"></i></div>
                 <div class="icon-btn logout-btn" onclick="logout()"><i class="fas fa-power-off"></i></div>
             </div>
         </header>
 
         <div style="max-width: 1200px; margin: 0 auto;">
-            <button id="backBtn" onclick="goBack()">🔙 رجوع</button>
-            <h2 id="sectionTitle">اختر المادة</h2>
+            <div class="nav-bar">
+                <h2 id="sectionTitle">اختر المادة</h2>
+                <button id="backBtn" onclick="goBack()">🔙 رجوع</button>
+            </div>
             <div id="contentArea" class="grid-container"></div>
         </div>
     </div>
@@ -176,43 +153,30 @@
     <div id="profileModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('profileModal')">&times;</span>
-            <h3 style="color:var(--main-color)">الملف الشخصي</h3>
-            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" style="width:80px; margin:10px 0;">
+            <h3 style="color:var(--main)">الملف الشخصي</h3>
             <div id="pName" style="font-size:1.5rem; font-weight:bold; margin:10px 0;">...</div>
-            <div id="pCode" style="color:#888; font-family:monospace; background:#000; padding:5px; border-radius:5px;">...</div>
-        </div>
-    </div>
-
-    <div id="supportModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('supportModal')">&times;</span>
-            <h3>الدعم الفني</h3>
-            <p style="color:#aaa;">واجهتك مشكلة؟ تواصل معنا فوراً</p>
-            <a href="https://wa.me/+201000000000" target="_blank" class="wa-btn">
-                <i class="fab fa-whatsapp"></i> تواصل عبر واتساب
-            </a>
+            <div id="pCode" style="color:#888; font-family:monospace;">...</div>
         </div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <script>
         // ==========================================
-        // 🔐 (قائمة الطلاب) ضيف الأكواد والأسماء هنا
+        // 🔐 (قائمة الطلاب) ضيف أكوادك هنا
         // ==========================================
         const ALLOWED_CODES = {
             "123456": "زائر تجريبي",
             "100200": "أحمد محمد",
-            "556677": "مريم علي",
-            "202620": "طالب ثانوية عامة"
+            "202620": "طالب ثانوية",
+            // "الكود": "الاسم",
         };
 
         // --- نظام الدخول ---
         let countTimer;
 
         window.onload = function() {
-            document.body.style.overflow = "auto"; // تأمين
-            
             const savedUser = localStorage.getItem('fullmark_user');
             if(savedUser && ALLOWED_CODES[savedUser]) {
                 startCountdown();
@@ -224,13 +188,13 @@
         function checkCode() {
             const code = document.getElementById('codeParams').value.trim();
             const msg = document.getElementById('loginMsg');
-            const btn = document.querySelector('.login-btn');
+            const btn = document.getElementById('loginBtn');
 
             if(!code) { msg.innerText = "اكتب الكود!"; msg.style.display = 'block'; return; }
             
             btn.innerText = "جاري التحقق...";
 
-            // التحقق السريع من القائمة
+            // تأخير بسيط عشان يبان كأنه بيحمل (محاكاة)
             setTimeout(() => {
                 if(ALLOWED_CODES[code]) {
                     localStorage.setItem('fullmark_user', code);
@@ -258,7 +222,8 @@
                     clearInterval(countTimer);
                     document.getElementById('welcomeSection').style.display = 'none';
                     document.getElementById('platformSection').style.display = 'block';
-                    showSubjects(); 
+                    // تشغيل المنصة فوراً
+                    renderSubjects();
                 }
             }, 1000);
         }
@@ -274,157 +239,112 @@
             location.reload();
         }
 
-        // ==========================================
-        // 📚 داتا المواد والمدرسين
-        // ==========================================
-        
+        // --- الداتا ---
         let platformData = [
           {
-            name: "الفرنساوي",
-            image: "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
-            teachers: [
+            "id": 1, "name": "الفرنساوي", "image": "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
+            "teachers": [
               {
-                name: "مسيو انس السعيد",
-                image: "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
-                folders: [
-                  {
-                    title: "كورس شرح المنهج 2026",
-                    image: "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
-                    videos: [
-                        { title: "جزء واحد تالتة ثانوي", desc: "بداية المنهج والقواعد الأساسية.", vid: "3PC1fxpp-Xk" },
-                        { title: "جزء اتنين تالتة ثانوي", desc: "استكمال الشرح والتدريبات.", vid: "fVJTHj5YW7Y" }
-                    ]
-                  }
+                "id": 101, "name": "مسيو انس السعيد", "image": "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
+                "folders": [
+                  { "id": "f1", "title": "كورس شرح المنهج 2026", "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", "videos": [ { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج", "vid": "3PC1fxpp-Xk" }, { "title": "جزء اتنين", "desc": "استكمال الشرح", "vid": "fVJTHj5YW7Y" } ] }
                 ]
               }
             ]
           },
           {
-            name: "الإيطالي",
-            image: "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
-            teachers: [
-              {
-                name: "سنيور مدحت غانم",
-                image: "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
-                folders: [
-                   {
-                    title: "مراجعات ليلة الامتحان",
-                    image: "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
-                    videos: [
-                        { title: "الإنقاذ: منهج الإيطالي كاملاً", desc: "المنهج كله في 5 ساعات بس.", vid: "T6hpZH5AMnk" }
-                    ]
-                   }
-                ]
-              }
-            ]
+            "id": 2, "name": "الإيطالي", "image": "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
+            "teachers": [ { "id": 201, "name": "سنيور مدحت غانم", "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg", "folders": [ { "id": "f2", "title": "مراجعات ليلة الامتحان", "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png", "videos": [ { "title": "الإنقاذ: المنهج كامل", "desc": "المنهج كله", "vid": "T6hpZH5AMnk" } ] } ] } ]
           },
-          // ضيف باقي المواد هنا بنفس الطريقة
+          // تقدر تضيف باقي المواد هنا...
         ];
 
-        // ==========================================
-        // 🎮 منطق العرض
-        // ==========================================
-
+        // --- العرض ---
         const contentArea = document.getElementById('contentArea');
         const sectionTitle = document.getElementById('sectionTitle');
         const backBtn = document.getElementById('backBtn');
-        
         let state = { level: 'subjects', subjectIdx: null, teacherIdx: null, folderIdx: null };
 
-        function showSubjects() {
+        function renderSubjects() {
             state.level = 'subjects';
             sectionTitle.innerText = "اختر المادة";
             backBtn.style.display = 'none';
             contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
-
-            platformData.forEach((subject, index) => {
-                contentArea.innerHTML += `
-                    <div class="card" onclick="showTeachers(${index})">
-                        <div class="card-img-container"><img src="${subject.image}" class="card-img"></div>
-                        <div class="card-body">
-                            <div class="card-title">${subject.name}</div>
-                            <div class="card-desc">اضغط لعرض المدرسين</div>
-                        </div>
-                    </div>
-                `;
-            });
+            contentArea.innerHTML = platformData.map((sub, i) => `
+                <div class="card" onclick="renderTeachers(${i})">
+                    <div class="card-img-container"><img src="${sub.image}" class="card-img"></div>
+                    <div class="card-body"><div class="card-title">${sub.name}</div></div>
+                </div>
+            `).join('');
         }
 
-        function showTeachers(idx) {
-            state.level = 'teachers';
-            state.subjectIdx = idx;
-            const subject = platformData[idx];
-            sectionTitle.innerText = `مدرسين مادة ${subject.name}`;
-            backBtn.style.display = 'inline-block';
-            contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
-
-            subject.teachers.forEach((teacher, tIndex) => {
-                contentArea.innerHTML += `
-                    <div class="card" onclick="showFolders(${tIndex})">
-                        <div class="card-img-container"><img src="${teacher.image}" class="card-img"></div>
-                        <div class="card-body">
-                            <div class="card-title">${teacher.name}</div>
-                            <div class="card-desc">اضغط لعرض الكورسات</div>
-                        </div>
-                    </div>
-                `;
-            });
+        window.renderTeachers = function(idx) {
+            state.level = 'teachers'; state.subjectIdx = idx;
+            const sub = platformData[idx];
+            sectionTitle.innerText = sub.name;
+            backBtn.style.display = 'block';
+            contentArea.innerHTML = sub.teachers.map((t, i) => `
+                <div class="card" onclick="renderFolders(${i})">
+                    <div class="card-img-container"><img src="${t.image}" class="card-img"></div>
+                    <div class="card-body"><div class="card-title">${t.name}</div></div>
+                </div>
+            `).join('');
         }
 
-        function showFolders(tIndex) {
-            state.level = 'folders';
-            state.teacherIdx = tIndex;
-            const teacher = platformData[state.subjectIdx].teachers[tIndex];
-            sectionTitle.innerText = `كورسات: ${teacher.name}`;
-            contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
-
-            if(!teacher.folders || teacher.folders.length === 0) {
-                 contentArea.innerHTML = '<p style="text-align:center;width:100%;color:#888;">لا يوجد محتوى حالياً</p>'; return;
-            }
-
-            teacher.folders.forEach((folder, fIndex) => {
-                contentArea.innerHTML += `
-                    <div class="card folder-card" onclick="showVideos(${fIndex})">
-                        <div class="card-img-container"><img src="${folder.image}" class="card-img"></div>
-                        <div class="card-body">
-                            <div class="card-title">${folder.title}</div>
-                            <div class="card-desc">${folder.videos.length} فيديوهات</div>
-                        </div>
-                    </div>
-                `;
-            });
+        window.renderFolders = function(idx) {
+            state.level = 'folders'; state.teacherIdx = idx;
+            const t = platformData[state.subjectIdx].teachers[idx];
+            sectionTitle.innerText = t.name;
+            contentArea.innerHTML = t.folders.map((f, i) => `
+                <div class="card folder-card" onclick="renderVideos(${i})">
+                    <div class="card-img-container"><img src="${f.image}" class="card-img"></div>
+                    <div class="card-body"><div class="card-title">${f.title}</div><div class="card-desc">${f.videos.length} فيديوهات</div></div>
+                </div>
+            `).join('');
         }
 
-        function showVideos(fIndex) {
-            state.level = 'videos';
-            state.folderIdx = fIndex;
-            const folder = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[fIndex];
-            sectionTitle.innerText = folder.title;
-            contentArea.className = ""; 
-            contentArea.innerHTML = '';
-            
+        window.renderVideos = function(idx) {
+            state.level = 'videos'; state.folderIdx = idx;
+            const f = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[idx];
+            sectionTitle.innerText = f.title;
+            contentArea.className = "video-list";
             const userCode = localStorage.getItem('fullmark_user');
 
-            folder.videos.forEach((video, vIndex) => {
-                contentArea.innerHTML += `
-                    <div class="video-wrapper">
-                        <div class="plyr__video-embed" id="player-${vIndex}">
-                            <iframe
-                                src="https://www.youtube.com/embed/${video.vid}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
-                                allowfullscreen allowtransparency allow="autoplay"
-                            ></iframe>
-                            <div class="watermark">${userCode}</div>
-                        </div>
-                        <div class="video-info">
-                            <div class="video-title">🎥 ${video.title}</div>
-                            <div style="color:#666;">${video.desc}</div>
-                        </div>
+            contentArea.innerHTML = f.videos.map((v, i) => `
+                <div class="video-wrapper">
+                    <div class="video-info">
+                        <div class="video-title">${v.title}</div>
+                        <div class="video-desc">${v.desc}</div>
                     </div>
-                `;
-            });
+                    <div class="plyr__video-embed" id="player-${i}">
+                        <iframe src="https://www.youtube.com/embed/${v.vid}?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+                        <div class="watermark">${userCode}</div>
+                    </div>
+                </div>
+            `).join('');
 
-            Plyr.setup('.plyr__video-embed', {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscr
+            setTimeout(() => {
+                f.videos.forEach((v, i) => new Plyr(`#player-${i}`));
+            }, 500);
+        }
+
+        window.goBack = function() {
+            if (state.level === 'videos') renderFolders(state.teacherIdx);
+            else if (state.level === 'folders') renderTeachers(state.subjectIdx);
+            else if (state.level === 'teachers') renderSubjects();
+        }
+
+        function openModal(id){ document.getElementById(id).style.display='flex'; }
+        function closeModal(id){ document.getElementById(id).style.display='none'; }
+        
+        function openProfile() {
+            openModal('profileModal');
+            const code = localStorage.getItem('fullmark_user');
+            const name = ALLOWED_CODES[code] || "غير معروف";
+            document.getElementById('pName').innerText = name;
+            document.getElementById('pCode').innerText = code;
+        }
+    </script>
+</body>
+    </html>
+    
