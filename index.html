@@ -27,33 +27,38 @@
             overflow-x: hidden;
         }
 
-        /* --- شاشة الدخول --- */
+        /* --- شاشة الدخول (تم الإصلاح) --- */
         #loginSection {
             height: 100vh; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #1a2332 0%, #000000 100%);
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 2000;
+            position: fixed; top: 0; left: 0; width: 100%; 
+            z-index: 9999; /* رقم عالي جداً */
         }
         .login-card {
             background: rgba(10, 15, 24, 0.95); border: 2px solid var(--main-color); padding: 40px; 
             border-radius: 20px; width: 90%; max-width: 400px; text-align: center;
             box-shadow: 0 0 50px rgba(0, 225, 255, 0.2); backdrop-filter: blur(10px);
+            position: relative; z-index: 10000; /* عشان نضمن إنه فوق الخلفية */
         }
         .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main-color); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main-color); }
         .login-input {
             width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
             border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; outline: none; margin-bottom: 20px;
+            position: relative; z-index: 10001; /* فوق الكارد */
         }
         .login-btn {
             width: 100%; padding: 15px; background: var(--main-color); color: #000; border: none; 
             border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+            position: relative; z-index: 10001; /* فوق الكارد */
         }
         .login-btn:hover { background: #fff; box-shadow: 0 0 20px var(--main-color); }
+        .login-btn:active { transform: scale(0.98); }
         .error-msg { color: #ff3333; margin-top: 15px; font-weight: bold; display: none; }
 
         /* --- شاشة الترحيب --- */
         #welcomeSection {
             display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center;
-            background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 1999;
+            background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 9000;
         }
         .counter-circle {
             width: 120px; height: 120px; border: 5px solid var(--main-color); border-radius: 50%;
@@ -189,7 +194,7 @@
             <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
             <button class="login-btn" onclick="checkCode()">دخول</button>
             <div id="loginMsg" class="error-msg"></div>
-            <p style="color:#555; font-size:0.8rem; margin-top:10px;">كود التجربة: 123456</p>
+            <button onclick="document.getElementById('codeParams').value='123456'" style="opacity:0; width:1px; height:1px;">.</button>
         </div>
     </div>
 
@@ -275,7 +280,7 @@
                 return;
             }
 
-            // الفايربيز
+            // الفايربيز (البحث عن الكود)
             db.collection('codes').where('code', '==', code).get().then(snap => {
                 if(snap.empty) {
                     msg.innerText = "❌ الكود غير صحيح!";
@@ -286,7 +291,8 @@
                     startCountdown();
                 }
             }).catch(e => {
-                msg.innerText = "⚠️ خطأ في الاتصال: " + e.message;
+                console.error(e); // شوف المشكلة في الكونسول
+                msg.innerText = "⚠️ مشكلة اتصال: " + e.message;
                 msg.style.display = 'block';
                 btn.innerText = "دخول";
             });
@@ -441,15 +447,4 @@
                     folder.videos.push({ title: v.videoName, desc: "تمت إضافته حديثاً", vid: v.videoLink });
                 });
                 renderSubjects();
-            } catch(e) { console.log(e); renderSubjects(); }
-        }
-
-        // ==========================================
-        // 2. منطق العرض (4 مستويات)
-        // ==========================================
-
-        const contentArea = document.getElementById('contentArea');
-        const sectionTitle = document.getElementById('sectionTitle');
-        const backBtn = document.getElementById('backBtn');
-        
-        // المت
+            }
