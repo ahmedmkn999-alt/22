@@ -10,116 +10,103 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- الثيم الأزرق النيون --- */
-        :root {
-            --main-color: #00e1ff;
-            --bg-color: #02050a;
-            --card-bg: #0a0f18;
-            --text-color: #ffffff;
-        }
+        :root { --main: #00e1ff; --bg: #02050a; --card-bg: #0a0f18; --text: #fff; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { background: linear-gradient(135deg, #02050a 0%, #050a14 100%); color: var(--text); min-height: 100vh; overflow-x: hidden; margin: 0; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-
-        body {
-            background: linear-gradient(135deg, #02050a 0%, #050a14 100%);
-            color: var(--text-color);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* --- شاشة الدخول --- */
+        /* --- 1. شاشة الدخول --- */
         #loginSection {
             height: 100vh; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #1a2332 0%, #000000 100%);
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 2000;
         }
         .login-card {
-            background: rgba(10, 15, 24, 0.95); border: 2px solid var(--main-color); padding: 40px; 
+            background: rgba(10, 15, 24, 0.95); border: 2px solid var(--main); padding: 40px; 
             border-radius: 20px; width: 90%; max-width: 400px; text-align: center;
             box-shadow: 0 0 50px rgba(0, 225, 255, 0.2); backdrop-filter: blur(10px);
         }
-        .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main-color); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main-color); }
+        .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main); }
         .login-input {
             width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
             border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; outline: none; margin-bottom: 20px;
         }
         .login-btn {
-            width: 100%; padding: 15px; background: var(--main-color); color: #000; border: none; 
-            border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer;
+            width: 100%; padding: 15px; background: var(--main); color: #000; border: none; 
+            border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
+        .login-btn:hover { box-shadow: 0 0 20px var(--main); }
         .error-msg { color: #ff3333; margin-top: 15px; display: none; }
 
-        /* --- المنصة --- */
-        #platformSection { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        /* --- 2. شاشة العد التنازلي (الترحيب) --- */
+        #welcomeSection {
+            display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center;
+            background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 1999;
+        }
+        .counter-circle {
+            width: 120px; height: 120px; border: 5px solid var(--main); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3.5rem; font-weight: bold; color: #fff; text-shadow: 0 0 20px var(--main);
+            box-shadow: 0 0 30px rgba(0, 225, 255, 0.3); animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
+        .welcome-text { margin-top: 20px; color: #888; font-size: 1.1rem; }
+
+        /* --- 3. المنصة --- */
+        #platformSection { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
         header {
             text-align: center; margin-bottom: 30px; padding-bottom: 20px;
-            border-bottom: 2px solid var(--main-color); position: relative;
+            border-bottom: 2px solid var(--main); position: relative;
             display: flex; justify-content: space-between; align-items: center;
         }
-
-        .logo-text { color: var(--main-color); font-size: 1.8rem; text-shadow: 0 0 15px var(--main-color); font-weight: 900; }
-        
+        .logo-text { color: var(--main); font-size: 1.8rem; text-shadow: 0 0 15px var(--main); font-weight: 900; }
         .header-icons { display: flex; gap: 10px; }
         .icon-btn { 
-            width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--main-color); 
+            width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--main); 
             display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer;
         }
         .logout-btn { border-color: #ff3333; color: #ff3333; }
 
         .nav-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         #backBtn {
-            display: none; background: transparent; color: var(--main-color);
-            border: 2px solid var(--main-color); padding: 5px 20px; border-radius: 50px;
+            display: none; background: transparent; color: var(--main);
+            border: 2px solid var(--main); padding: 5px 20px; border-radius: 50px;
             cursor: pointer; font-weight: bold; transition: 0.3s;
         }
-        #backBtn:hover { background-color: var(--main-color); color: #000; }
+        #backBtn:hover { background-color: var(--main); color: #000; }
 
-        h2#sectionTitle { color: #fff; border-right: 4px solid var(--main-color); padding-right: 10px; margin: 0; }
+        h2#sectionTitle { color: #fff; border-right: 4px solid var(--main); padding-right: 10px; margin: 0; }
 
-        .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding-bottom: 50px;
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding-bottom: 50px; }
 
         .card {
             background-color: var(--card-bg); border-radius: 16px; overflow: hidden;
             border: 1px solid rgba(0, 225, 255, 0.15); transition: 0.3s; cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .card:active { transform: scale(0.97); border-color: var(--main-color); }
-
+        .card:active { transform: scale(0.97); border-color: var(--main); }
         .card-img-container { width: 100%; height: 160px; background: #000; display: flex; align-items: center; justify-content: center; padding: 10px; }
         .card-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
         .card-body { padding: 15px; text-align: center; }
         .card-title { font-size: 1rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
         .card-desc { font-size: 0.8rem; color: #888; }
 
-        /* الفيديو */
         .video-list { display: flex; flex-direction: column; gap: 25px; }
-        .video-wrapper {
-            background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; position: relative;
-        }
+        .video-wrapper { background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; position: relative; }
         .video-info { padding: 15px; background: #111; border-bottom: 1px solid #333; }
-        .video-title { font-size: 1.1rem; font-weight: bold; color: var(--main-color); }
-        
-        /* العلامة المائية */
-        .watermark {
-            position: absolute; top: 20px; left: 20px; color: rgba(255,255,255,0.3); 
-            font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 100;
-            animation: float 6s infinite alternate;
-        }
+        .video-title { font-size: 1.1rem; font-weight: bold; color: var(--main); }
+        .watermark { position: absolute; top: 20px; left: 20px; color: rgba(255,255,255,0.3); font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 100; animation: float 6s infinite alternate; }
         @keyframes float { 0% {top:10%;left:10%} 100% {top:80%;left:80%} }
 
-        /* المودال */
+        /* مودال */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
-        .modal-content { background: #0f121a; border: 1px solid var(--main-color); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
+        .modal-content { background: #0f121a; border: 1px solid var(--main); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
         .close { position: absolute; top: 15px; left: 15px; color: #fff; font-size: 22px; cursor: pointer; }
-        
         .chat-box { height: 300px; overflow-y: auto; background: #000; padding: 10px; margin-bottom: 10px; border-radius: 10px; text-align: right; }
         .msg { background: #333; padding: 5px 10px; border-radius: 10px; margin-bottom: 5px; display: inline-block; }
-        .msg.me { background: var(--main-color); color: #000; }
-        
+        .msg.me { background: var(--main); color: #000; }
         .timer { font-family: monospace; font-size: 1.2rem; margin-top: 10px; color: #fff; }
     </style>
 </head>
@@ -130,9 +117,15 @@
             <div class="login-logo">ذاكرلي</div>
             <p style="color:#888; margin-bottom:20px;">أدخل كود الطالب</p>
             <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
-            <button class="login-btn" onclick="attemptLogin()">دخول</button>
+            <button class="login-btn" onclick="checkCode()">دخول</button>
             <div id="loginMsg" class="error-msg"></div>
         </div>
+    </div>
+
+    <div id="welcomeSection">
+        <div class="counter-circle" id="counter">5</div>
+        <div class="welcome-text">جاري تجهيز محتواك التعليمي...</div>
+        <button onclick="cancelLogin()" style="margin-top:20px; background:none; border:1px solid #555; color:#777; padding:5px 15px; border-radius:20px; cursor:pointer;">تغيير الحساب</button>
     </div>
 
     <div id="platformSection">
@@ -157,7 +150,7 @@
     <div id="profileModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('profileModal')">&times;</span>
-            <h3 style="color:var(--main-color)">الملف الشخصي</h3>
+            <h3 style="color:var(--main)">الملف الشخصي</h3>
             <div id="pName" style="font-size:1.5rem; font-weight:bold; margin:10px 0;">...</div>
             <div id="pCode" style="color:#888; font-family:monospace;">...</div>
             <div class="timer" id="countdown">...</div>
@@ -171,7 +164,7 @@
             <div class="chat-box" id="chatBody"></div>
             <div style="display:flex; gap:5px;">
                 <input type="text" id="chatInput" style="flex:1; padding:10px; border-radius:5px; border:none;" placeholder="رسالتك...">
-                <button onclick="sendMsg()" style="padding:10px; background:var(--main-color); border:none; border-radius:5px;">إرسال</button>
+                <button onclick="sendMsg()" style="padding:10px; background:var(--main); border:none; border-radius:5px;">إرسال</button>
             </div>
         </div>
     </div>
@@ -182,38 +175,86 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // ============================================
-        // 🛡️ نظام الحماية النووية (Anti-Hack System)
-        // ============================================
-        (function() {
-            // 1. منع كليك يمين
-            document.addEventListener('contextmenu', e => e.preventDefault());
-
-            // 2. منع الاختصارات (F12, Ctrl+U, Ctrl+S)
-            document.onkeydown = function(e) {
-                if (e.keyCode == 123) return false;
-                if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
-                if (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'P'.charCodeAt(0))) return false;
-            };
-
-            // 3. فخ "الديبيجر" (يجمد المتصفح لو الكونسول اتفتح)
-            setInterval(function() {
-                const start = performance.now();
-                debugger; 
-                if (performance.now() - start > 100) {
-                    document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%'>⚠️ تم كشف محاولة اختراق ⚠️</h1>";
-                    window.location.reload();
-                }
-            }, 500);
-        })();
-
-        // ============================================
-        // 🔥 إعدادات الفايربيز والبيانات
-        // ============================================
         const firebaseConfig = { apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds", authDomain: "full-mark-8d434.firebaseapp.com", projectId: "full-mark-8d434", storageBucket: "full-mark-8d434.firebasestorage.app", messagingSenderId: "802579483999", appId: "1:802579483999:web:cf73136ffbd75d5e0ebaea" };
         firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
 
-        // البيانات الأساسية
+        // --- نظام الدخول الذكي ---
+        let countTimer;
+
+        // عند فتح الصفحة، شوف لو مسجل قبل كدة
+        window.onload = function() {
+            const savedUser = localStorage.getItem('fullmark_user');
+            if(savedUser) {
+                // لو مسجل، شغل العداد علطول
+                startCountdown();
+            } else {
+                // لو مش مسجل، اظهر الدخول
+                document.getElementById('loginSection').style.display = 'flex';
+            }
+        };
+
+        function checkCode() {
+            const code = document.getElementById('codeParams').value.trim();
+            const msg = document.getElementById('loginMsg');
+            const btn = document.querySelector('.login-btn');
+
+            if(!code) { msg.innerText = "اكتب الكود!"; msg.style.display = 'block'; return; }
+            
+            btn.innerText = "جاري التحقق...";
+            msg.style.display = 'none';
+
+            // البحث في الفايربيز
+            db.collection('codes').where('code', '==', code).get().then(snap => {
+                if(snap.empty) {
+                    msg.innerText = "الكود ده غلط!";
+                    msg.style.display = 'block';
+                    btn.innerText = "دخول";
+                } else {
+                    // كود صح -> احفظه وابدأ العداد
+                    localStorage.setItem('fullmark_user', code);
+                    startCountdown();
+                }
+            }).catch(e => {
+                msg.innerText = "مشكلة في النت";
+                msg.style.display = 'block';
+                btn.innerText = "دخول";
+            });
+        }
+
+        function startCountdown() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('welcomeSection').style.display = 'flex';
+            
+            let count = 5;
+            const el = document.getElementById('counter');
+            el.innerText = count;
+
+            countTimer = setInterval(() => {
+                count--;
+                el.innerText = count;
+                if(count <= 0) {
+                    clearInterval(countTimer);
+                    document.getElementById('welcomeSection').style.display = 'none';
+                    document.getElementById('platformSection').style.display = 'block';
+                    loadAndMerge(); // حمل الداتا
+                }
+            }, 1000);
+        }
+
+        function cancelLogin() {
+            clearInterval(countTimer);
+            localStorage.removeItem('fullmark_user');
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'flex';
+            document.querySelector('.login-btn').innerText = "دخول";
+        }
+
+        function logout() {
+            localStorage.removeItem('fullmark_user');
+            location.reload();
+        }
+
+        // --- منطق المنصة (الداتا والعرض) ---
         let platformData = [
           {
             "id": 1, "name": "الفرنساوي", "image": "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
@@ -245,7 +286,6 @@
           }
         ];
 
-        // دمج الداتا من الأدمن
         async function loadAndMerge() {
             try {
                 const snap = await db.collection('new_videos').get();
@@ -266,38 +306,11 @@
             } catch(e) { console.log(e); renderSubjects(); }
         }
 
-        // ============================================
-        // 🎮 منطق التطبيق
-        // ============================================
+        // --- منطق العرض والتنقل ---
         const contentArea = document.getElementById('contentArea');
         const sectionTitle = document.getElementById('sectionTitle');
         const backBtn = document.getElementById('backBtn');
         let state = { level: 'subjects', subjectIdx: null, teacherIdx: null, folderIdx: null };
-
-        // التحقق من الدخول
-        if(localStorage.getItem('fullmark_user')) {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('platformSection').style.display = 'block';
-            loadAndMerge();
-        }
-
-        function attemptLogin() {
-            const code = document.getElementById('codeParams').value.trim();
-            const msg = document.getElementById('loginMsg');
-            const btn = document.querySelector('.login-btn');
-
-            if(!code) { msg.innerText = "اكتب الكود!"; msg.style.display = "block"; return; }
-            btn.innerText = "جاري التحقق...";
-
-            db.collection('codes').where('code', '==', code).get().then(snap => {
-                if(snap.empty) {
-                    msg.innerText = "الكود غير صحيح"; msg.style.display = "block"; btn.innerText = "دخول";
-                } else {
-                    localStorage.setItem('fullmark_user', code);
-                    location.reload();
-                }
-            }).catch(e => { msg.innerText = "تأكد من الإنترنت"; msg.style.display = "block"; btn.innerText = "دخول"; });
-        }
 
         function renderSubjects() {
             state.level = 'subjects';
@@ -350,20 +363,4 @@
                         <div class="video-title">${v.title}</div>
                         <div class="video-desc">${v.desc}</div>
                     </div>
-                    <div class="plyr__video-embed" id="player-${i}">
-                        ${v.type === 'hls' || v.vid.includes('http') ? 
-                        `<video id="vid-${i}" controls crossorigin playsinline></video>` : 
-                        `<iframe src="https://www.youtube.com/embed/${v.vid}?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>`
-                        }
-                        <div class="watermark">${userCode}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            setTimeout(() => {
-                f.videos.forEach((v, i) => {
-                    if (v.type === 'hls' || v.vid.includes('.m3u8')) {
-                        const video = document.getElementById(`vid-${i}`);
-                        if (Hls.isSupported()) {
-                            const hls = new Hls(); hls.loadSource(v.vid); hls.attachMedia(video);
-                        } else if (video.canPlayType('applicatio
+                    <div cla
