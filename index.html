@@ -38,21 +38,13 @@
             transition: opacity 0.8s ease-in-out;
         }
 
-        /* تنسيق صورة اللوجو */
         .welcome-logo-img {
-            width: 200px; /* حجم اللوجو */
-            max-width: 80%;
-            margin-bottom: 20px;
-            /* تأثير التوهج للوجو */
+            width: 200px; max-width: 80%; margin-bottom: 20px;
             filter: drop-shadow(0 0 15px var(--neon-blue)); 
-            animation: pulse-img 3s infinite;
-            border-radius: 20px; /* تدوير حواف الصورة قليلاً لتناسب التصميم */
+            animation: pulse-img 3s infinite; border-radius: 20px;
         }
 
-        .welcome-sub {
-            color: #aaa; font-size: 1.2rem; margin-bottom: 40px;
-            text-align: center;
-        }
+        .welcome-sub { color: #aaa; font-size: 1.2rem; margin-bottom: 40px; text-align: center; }
 
         .start-btn {
             padding: 15px 50px; border-radius: 50px;
@@ -65,8 +57,7 @@
 
         .start-btn:hover {
             background: var(--neon-blue); color: black;
-            box-shadow: 0 0 40px var(--neon-blue);
-            transform: scale(1.1);
+            box-shadow: 0 0 40px var(--neon-blue); transform: scale(1.1);
         }
 
         @keyframes pulse-img {
@@ -104,13 +95,11 @@
 
         .card {
             background: var(--card-bg); border-radius: 20px; overflow: hidden;
-            border: 1px solid #222; transition: 0.4s; cursor: pointer;
-            position: relative;
+            border: 1px solid #222; transition: 0.4s; cursor: pointer; position: relative;
         }
 
         .card:hover {
-            transform: translateY(-8px); border-color: var(--neon-blue);
-            box-shadow: var(--glow);
+            transform: translateY(-8px); border-color: var(--neon-blue); box-shadow: var(--glow);
         }
 
         .card-img { width: 100%; height: 180px; object-fit: cover; filter: brightness(0.7); transition:0.3s; }
@@ -136,6 +125,8 @@
             animation: spin 1s linear infinite; display: none; margin-top: 20px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        #status-text { margin-top: 15px; color: #888; font-size: 0.9rem; display: none; }
 
     </style>
 </head>
@@ -143,13 +134,13 @@
 
     <div id="welcome-screen">
         <img src="https://i.postimg.cc/XqDYNm4J/IMG-20260207-205632.jpg" alt="Full Mark Two Logo" class="welcome-logo-img">
-        
         <div class="welcome-sub">منصتك التعليمية المتطورة</div>
         
         <button id="start-btn" class="start-btn" onclick="enterPlatform()">
             ابدأ رحلة التعلم 🚀
         </button>
         <div class="loader" id="loader"></div>
+        <div id="status-text">جاري فحص وتحديث البيانات...</div>
     </div>
 
     <div id="platform-content">
@@ -169,7 +160,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds",
@@ -184,22 +175,113 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // ==========================================
+        // 1. البيانات الاحتياطية (للحقن التلقائي)
+        // ==========================================
+        const initialData = [
+          {
+            name: "الفرنساوي",
+            image: "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
+            teachers: [
+              {
+                name: "مسيو انس السعيد",
+                image: "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
+                folders: [ 
+                  {
+                    title: "كورس شرح المنهج 2026",
+                    videos: [
+                        { title: "جزء واحد تالتة ثانوي", desc: "بداية المنهج والقواعد الأساسية.", vid: "3PC1fxpp-Xk" },
+                        { title: "جزء اتنين تالتة ثانوي", desc: "استكمال الشرح والتدريبات.", vid: "fVJTHj5YW7Y" },
+                        { title: "جزء تلاتة تالتة ثانوي", desc: "شرح متقدم وملاحظات هامة.", vid: "Afx9AHypc7M" },
+                        { title: "الجزء الاخير تالتة ثانوي", desc: "ختام المنهج والمراجعة.", vid: "6s_TWiP1KgQ" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: "الإيطالي",
+            image: "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
+            teachers: [
+              {
+                name: "سنيور مدحت غانم",
+                image: "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
+                folders: [
+                   {
+                    title: "مراجعات ليلة الامتحان",
+                    videos: [
+                        { title: "الإنقاذ: منهج الإيطالي كاملاً", desc: "المنهج كله في 5 ساعات بس.", vid: "T6hpZH5AMnk" }
+                    ]
+                   }
+                ]
+              }
+            ]
+          },
+          {
+            name: "الألماني",
+            image: "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
+            teachers: [
+              {
+                name: "هير ياسين ابو الزيد",
+                image: "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
+                folders: [
+                    {
+                        title: "كورس التأسيس والشرح",
+                        videos: [
+                            { title: "اللغة الألمانية - ج1", desc: "الأساسيات وقواعد النطق.", vid: "JOLc4Jc9yFU" },
+                            { title: "اللغة الألمانية - ج2", desc: "الجراماتيك وتريكات الامتحانات.", vid: "L2irLAg7jHM" },
+                            { title: "اللغة الألمانية - ج3", desc: "المواقف الحياتية.", vid: "I-3VLcEoCP8" },
+                            { title: "اللغة الألمانية - ج4", desc: "حل تدريبات شاملة.", vid: "oRopKQ63a-I" }
+                        ]
+                    }
+                ]
+              }
+            ]
+          },
+          {
+            name: "الإسباني",
+            image: "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
+            teachers: [
+              {
+                name: "سنيور ماجد فارس",
+                image: "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
+                folders: [
+                    {
+                        title: "المراجعة النهائية",
+                        videos: [
+                             { title: "شرح المنهج كاملاً", desc: "فيديو واحد فيه الخلاصة.", vid: "K9ZOydc1cqs" }
+                        ]
+                    }
+                ]
+              }
+            ]
+          }
+        ];
+
         let platformData = [];
         let isDataLoaded = false;
 
+        // ==========================================
+        // 2. فحص الداتا والحقن التلقائي
+        // ==========================================
         window.enterPlatform = async () => {
             const btn = document.getElementById('start-btn');
             const loader = document.getElementById('loader');
+            const statusText = document.getElementById('status-text');
 
             if (!isDataLoaded) {
                 btn.style.display = 'none';
                 loader.style.display = 'block';
-                await fetchSubjects();
+                statusText.style.display = 'block';
+                
+                // حاول تجيب الداتا
+                await fetchAndInjectSubjects();
             }
 
+            // الانتقال للمنصة
             const welcomeScreen = document.getElementById('welcome-screen');
             welcomeScreen.style.opacity = '0';
-            
             setTimeout(() => {
                 welcomeScreen.style.display = 'none';
                 document.getElementById('platform-content').style.display = 'block';
@@ -207,26 +289,38 @@
             }, 800);
         };
 
-        async function fetchSubjects() {
+        async function fetchAndInjectSubjects() {
             try {
+                // 1. شوف فيه داتا ولا لأ
                 const querySnapshot = await getDocs(collection(db, "subjects"));
-                platformData = [];
-                querySnapshot.forEach((doc) => {
-                    platformData.push(doc.data());
-                });
+                
+                if (querySnapshot.empty) {
+                    // مفيش داتا؟ ارفعها حالاً!
+                    document.getElementById('status-text').innerText = "يتم رفع المواد لأول مرة...";
+                    for (const subject of initialData) {
+                        await addDoc(collection(db, "subjects"), subject);
+                    }
+                    platformData = initialData; // استخدم الداتا المحلية مؤقتاً
+                } else {
+                    // فيه داتا؟ هاتها
+                    platformData = [];
+                    querySnapshot.forEach((doc) => {
+                        platformData.push(doc.data());
+                    });
+                }
                 isDataLoaded = true;
             } catch (e) {
-                console.error("Error fetching data:", e);
-                alert("حدث خطأ في تحميل البيانات، تأكد من الانترنت");
+                console.error("Error:", e);
+                alert("حدث خطأ في الاتصال");
                 document.getElementById('start-btn').style.display = 'block';
                 document.getElementById('loader').style.display = 'none';
+                document.getElementById('status-text').style.display = 'none';
             }
         }
 
-        window.addEventListener('load', () => {
-            fetchSubjects(); 
-        });
-
+        // ==========================================
+        // 3. نظام العرض (Render Logic)
+        // ==========================================
         const contentArea = document.getElementById('content-area');
         const sectionTitle = document.getElementById('section-title');
         const backBtn = document.getElementById('back-btn');
@@ -239,11 +333,6 @@
             backBtn.style.display = 'none';
             contentArea.className = "grid-container";
             
-            if(platformData.length === 0) {
-                contentArea.innerHTML = '<p style="text-align:center; width:100%; color:#888;">جاري تحميل المواد...</p>';
-                return;
-            }
-
             contentArea.innerHTML = platformData.map((sub, i) => `
                 <div class="card" onclick="renderTeachers(${i})">
                     <img src="${sub.image}" class="card-img">
@@ -322,5 +411,5 @@
 
     </script>
 </body>
-            </html>
-            
+                </html>
+    
