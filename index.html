@@ -16,7 +16,7 @@
         
         body { background: linear-gradient(135deg, #02050a 0%, #050a14 100%); color: var(--text); min-height: 100vh; overflow-x: hidden; margin: 0; }
 
-        /* --- 1. شاشة الدخول --- */
+        /* شاشة الدخول */
         #loginSection {
             height: 100vh; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #1a2332 0%, #000000 100%);
@@ -36,10 +36,9 @@
             width: 100%; padding: 15px; background: var(--main); color: #000; border: none; 
             border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
-        .login-btn:hover { box-shadow: 0 0 20px var(--main); }
-        .error-msg { color: #ff3333; margin-top: 15px; display: none; }
-
-        /* --- 2. شاشة العد التنازلي (الترحيب) --- */
+        .login-btn:hover { box-shadow: 0 0 20px var(--main); background: #fff; }
+        
+        /* شاشة الترحيب */
         #welcomeSection {
             display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center;
             background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 1999;
@@ -53,7 +52,7 @@
         @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
         .welcome-text { margin-top: 20px; color: #888; font-size: 1.1rem; }
 
-        /* --- 3. المنصة --- */
+        /* المنصة */
         #platformSection { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
         header {
@@ -118,7 +117,7 @@
             <p style="color:#888; margin-bottom:20px;">أدخل كود الطالب</p>
             <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
             <button class="login-btn" onclick="checkCode()">دخول</button>
-            <div id="loginMsg" class="error-msg"></div>
+            <p style="color:#555; font-size:0.8rem; margin-top:10px;">كود التجربة: 123456</p>
         </div>
     </div>
 
@@ -195,28 +194,30 @@
 
         function checkCode() {
             const code = document.getElementById('codeParams').value.trim();
-            const msg = document.getElementById('loginMsg');
             const btn = document.querySelector('.login-btn');
 
-            if(!code) { msg.innerText = "اكتب الكود!"; msg.style.display = 'block'; return; }
+            if(!code) { alert("اكتب الكود!"); return; }
             
             btn.innerText = "جاري التحقق...";
-            msg.style.display = 'none';
+
+            // الكود السحري للتجربة (عشان تدخلي فوراً)
+            if(code === '123456') {
+                localStorage.setItem('fullmark_user', code);
+                startCountdown();
+                return;
+            }
 
             // البحث في الفايربيز
             db.collection('codes').where('code', '==', code).get().then(snap => {
                 if(snap.empty) {
-                    msg.innerText = "الكود ده غلط!";
-                    msg.style.display = 'block';
+                    alert("❌ الكود غلط! تأكد من الكود أو جرب 123456");
                     btn.innerText = "دخول";
                 } else {
-                    // كود صح -> احفظه وابدأ العداد
                     localStorage.setItem('fullmark_user', code);
                     startCountdown();
                 }
             }).catch(e => {
-                msg.innerText = "مشكلة في النت";
-                msg.style.display = 'block';
+                alert("⚠️ مشكلة في النت: " + e.message);
                 btn.innerText = "دخول";
             });
         }
@@ -363,4 +364,5 @@
                         <div class="video-title">${v.title}</div>
                         <div class="video-desc">${v.desc}</div>
                     </div>
-                    <div cla
+                    <div class="plyr__video-embed" id="player-${i}">
+                        ${v.type === 'hls' || v.vi
