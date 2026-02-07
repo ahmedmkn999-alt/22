@@ -10,11 +10,11 @@
     
     <style>
         :root {
-            --neon-blue: #00e5ff; /* اللون الأزرق المضيء */
-            --bg-dark: #050505;   /* الخلفية السوداء */
-            --card-bg: #111111;   /* لون الكروت */
+            --neon-blue: #00e5ff;
+            --bg-dark: #050505;
+            --card-bg: #111111;
             --text-color: #ffffff;
-            --glow: 0 0 15px rgba(0, 229, 255, 0.3);
+            --glow: 0 0 20px rgba(0, 229, 255, 0.4);
         }
 
         body {
@@ -23,69 +23,71 @@
             background-color: var(--bg-dark);
             color: var(--text-color);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* ==============================
-           1. شاشة الدخول (تصميم الصورة)
+           1. صفحة الترحيب (Welcome Screen)
            ============================== */
-        #login-screen {
+        #welcome-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-dark);
-            display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
             z-index: 9999;
+            transition: opacity 0.8s ease-in-out;
         }
 
-        .login-card {
-            width: 90%; max-width: 380px; padding: 40px 20px;
-            border-radius: 25px;
-            border: 2px solid var(--neon-blue);
-            box-shadow: var(--glow);
+        /* تنسيق صورة اللوجو */
+        .welcome-logo-img {
+            width: 200px; /* حجم اللوجو */
+            max-width: 80%;
+            margin-bottom: 20px;
+            /* تأثير التوهج للوجو */
+            filter: drop-shadow(0 0 15px var(--neon-blue)); 
+            animation: pulse-img 3s infinite;
+            border-radius: 20px; /* تدوير حواف الصورة قليلاً لتناسب التصميم */
+        }
+
+        .welcome-sub {
+            color: #aaa; font-size: 1.2rem; margin-bottom: 40px;
             text-align: center;
-            background: var(--card-bg);
         }
 
-        .app-title {
-            font-size: 2.5rem; font-weight: 900; color: var(--neon-blue);
-            margin: 0 0 30px 0; text-shadow: 0 0 20px var(--neon-blue);
-            text-transform: uppercase; letter-spacing: 1px;
+        .start-btn {
+            padding: 15px 50px; border-radius: 50px;
+            border: 2px solid var(--neon-blue);
+            background: transparent; color: var(--neon-blue);
+            font-weight: 800; font-size: 1.3rem; cursor: pointer;
+            font-family: 'Cairo'; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
         }
 
-        .custom-input {
-            width: 100%; padding: 15px; border-radius: 50px;
-            border: 1px solid #333; background-color: #000;
-            color: white; text-align: center; font-size: 1.1rem;
-            font-family: 'Cairo'; margin-bottom: 20px; outline: none;
-            box-sizing: border-box; transition: 0.3s;
+        .start-btn:hover {
+            background: var(--neon-blue); color: black;
+            box-shadow: 0 0 40px var(--neon-blue);
+            transform: scale(1.1);
         }
 
-        .custom-input:focus { border-color: var(--neon-blue); box-shadow: var(--glow); }
-
-        .login-btn {
-            width: 100%; padding: 15px; border-radius: 50px;
-            border: none; background-color: var(--neon-blue);
-            color: #000; font-weight: 800; font-size: 1.2rem;
-            cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
+        @keyframes pulse-img {
+            0% { filter: drop-shadow(0 0 15px var(--neon-blue)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 30px var(--neon-blue)); transform: scale(1.05); }
+            100% { filter: drop-shadow(0 0 15px var(--neon-blue)); transform: scale(1); }
         }
-        .login-btn:hover { transform: scale(1.02); box-shadow: 0 0 30px var(--neon-blue); }
 
         /* ==============================
-           2. المنصة الداخلية (Dark Neon)
+           2. المنصة الداخلية
            ============================== */
         #platform-content { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
 
         header {
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 30px;
+            animation: slideDown 1s ease-out;
         }
 
         .header-title { color: var(--neon-blue); margin: 0; font-weight: 800; font-size: 1.5rem; }
-        
-        .logout-btn {
-            background: transparent; border: 1px solid #ff3333; color: #ff3333;
-            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-family: 'Cairo';
-        }
 
-        /* أزرار التنقل */
         #nav-controls { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
         #back-btn {
             display: none; background: #333; color: white; border: none;
@@ -94,31 +96,30 @@
         #back-btn:hover { background: var(--neon-blue); color: black; }
         #section-title { font-size: 1.3rem; font-weight: bold; }
 
-        /* الشبكة والكروت */
         .grid-container {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px; padding-bottom: 50px;
+            animation: fadeIn 1s ease-out;
         }
 
         .card {
-            background: var(--card-bg); border-radius: 16px; overflow: hidden;
-            border: 1px solid #333; transition: 0.3s; cursor: pointer;
+            background: var(--card-bg); border-radius: 20px; overflow: hidden;
+            border: 1px solid #222; transition: 0.4s; cursor: pointer;
             position: relative;
         }
 
         .card:hover {
-            transform: translateY(-5px); border-color: var(--neon-blue);
+            transform: translateY(-8px); border-color: var(--neon-blue);
             box-shadow: var(--glow);
         }
 
-        .card-img { width: 100%; height: 180px; object-fit: cover; filter: brightness(0.8); }
+        .card-img { width: 100%; height: 180px; object-fit: cover; filter: brightness(0.7); transition:0.3s; }
         .card:hover .card-img { filter: brightness(1); }
 
         .card-body { padding: 20px; text-align: center; }
         .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
         .card-desc { font-size: 0.9rem; color: #888; }
 
-        /* الفيديو */
         .video-wrapper {
             background: var(--card-bg); border-radius: 15px; overflow: hidden;
             margin-bottom: 30px; border: 1px solid #333;
@@ -126,24 +127,34 @@
         .video-info { padding: 20px; }
         .plyr--video { --plyr-color-main: #00e5ff; }
 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .loader {
+            border: 4px solid #333; border-top: 4px solid var(--neon-blue);
+            border-radius: 50%; width: 30px; height: 30px;
+            animation: spin 1s linear infinite; display: none; margin-top: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-card">
-            <h1 class="app-title">FULL MARK TWO</h1>
-            <p style="color:#888; margin-bottom:10px;">أدخل كود الطالب</p>
-            <input type="password" id="code-input" class="custom-input" placeholder="الكود هنا">
-            <button class="login-btn" onclick="verifyCode()">دخول</button>
-            <div id="error-message" style="color: #ff3333; margin-top: 15px; display: none;">الكود غير صحيح</div>
-        </div>
+    <div id="welcome-screen">
+        <img src="https://i.postimg.cc/XqDYNm4J/IMG-20260207-205632.jpg" alt="Full Mark Two Logo" class="welcome-logo-img">
+        
+        <div class="welcome-sub">منصتك التعليمية المتطورة</div>
+        
+        <button id="start-btn" class="start-btn" onclick="enterPlatform()">
+            ابدأ رحلة التعلم 🚀
+        </button>
+        <div class="loader" id="loader"></div>
     </div>
 
     <div id="platform-content">
         <header>
             <div class="header-title">💎 Full Mark 2</div>
-            <button class="logout-btn" onclick="logout()">خروج 🔒</button>
         </header>
 
         <div id="nav-controls">
@@ -158,7 +169,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds",
@@ -173,175 +184,77 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ========================
-        // 1. الداتا (المواد والفيديوهات)
-        // ========================
-        const platformData = [
-          {
-            name: "الفرنساوي",
-            image: "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
-            teachers: [
-              {
-                name: "مسيو انس السعيد",
-                image: "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
-                folders: [ 
-                  {
-                    title: "كورس شرح المنهج 2026",
-                    videos: [
-                        { title: "جزء واحد تالتة ثانوي", desc: "بداية المنهج والقواعد الأساسية.", vid: "3PC1fxpp-Xk" },
-                        { title: "جزء اتنين تالتة ثانوي", desc: "استكمال الشرح والتدريبات.", vid: "fVJTHj5YW7Y" },
-                        { title: "جزء تلاتة تالتة ثانوي", desc: "شرح متقدم وملاحظات هامة.", vid: "Afx9AHypc7M" },
-                        { title: "الجزء الاخير تالتة ثانوي", desc: "ختام المنهج والمراجعة.", vid: "6s_TWiP1KgQ" }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            name: "الإيطالي",
-            image: "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
-            teachers: [
-              {
-                name: "سنيور مدحت غانم",
-                image: "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
-                folders: [
-                   {
-                    title: "مراجعات ليلة الامتحان",
-                    videos: [
-                        { title: "الإنقاذ: منهج الإيطالي كاملاً", desc: "المنهج كله في 5 ساعات بس.", vid: "T6hpZH5AMnk" }
-                    ]
-                   }
-                ]
-              }
-            ]
-          },
-          {
-            name: "الألماني",
-            image: "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
-            teachers: [
-              {
-                name: "هير ياسين ابو الزيد",
-                image: "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
-                folders: [
-                    {
-                        title: "كورس التأسيس والشرح",
-                        videos: [
-                            { title: "اللغة الألمانية - ج1", desc: "الأساسيات وقواعد النطق.", vid: "JOLc4Jc9yFU" },
-                            { title: "اللغة الألمانية - ج2", desc: "الجراماتيك وتريكات الامتحانات.", vid: "L2irLAg7jHM" },
-                            { title: "اللغة الألمانية - ج3", desc: "المواقف الحياتية.", vid: "I-3VLcEoCP8" },
-                            { title: "اللغة الألمانية - ج4", desc: "حل تدريبات شاملة.", vid: "oRopKQ63a-I" }
-                        ]
-                    }
-                ]
-              }
-            ]
-          },
-          {
-            name: "الإسباني",
-            image: "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
-            teachers: [
-              {
-                name: "سنيور ماجد فارس",
-                image: "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
-                folders: [
-                    {
-                        title: "المراجعة النهائية",
-                        videos: [
-                             { title: "شرح المنهج كاملاً", desc: "فيديو واحد فيه الخلاصة.", vid: "K9ZOydc1cqs" }
-                        ]
-                    }
-                ]
-              }
-            ]
-          }
-        ];
+        let platformData = [];
+        let isDataLoaded = false;
 
-        // ========================
-        // 2. نظام تسجيل الدخول
-        // ========================
-        window.verifyCode = async () => {
-            const codeInput = document.getElementById('code-input');
-            const btn = document.querySelector('.login-btn');
-            const errorMsg = document.getElementById('error-message');
-            const code = codeInput.value.trim();
+        window.enterPlatform = async () => {
+            const btn = document.getElementById('start-btn');
+            const loader = document.getElementById('loader');
 
-            if (!code) return;
-
-            btn.innerHTML = "جاري التحقق...";
-            btn.style.opacity = "0.7";
-            errorMsg.style.display = 'none';
-
-            try {
-                const q = query(collection(db, "codes"), where("code", "==", code));
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    localStorage.setItem('fm_user_token', code);
-                    showPlatform();
-                } else {
-                    errorMsg.style.display = 'block';
-                    btn.innerHTML = "دخول";
-                    btn.style.opacity = "1";
-                }
-            } catch (e) {
-                console.error(e);
-                errorMsg.innerText = "خطأ في الاتصال!";
-                errorMsg.style.display = 'block';
-                btn.innerHTML = "دخول";
+            if (!isDataLoaded) {
+                btn.style.display = 'none';
+                loader.style.display = 'block';
+                await fetchSubjects();
             }
+
+            const welcomeScreen = document.getElementById('welcome-screen');
+            welcomeScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+                document.getElementById('platform-content').style.display = 'block';
+                renderSubjects();
+            }, 800);
         };
 
-        function showPlatform() {
-            const loginScreen = document.getElementById('login-screen');
-            loginScreen.style.transition = 'opacity 0.5s';
-            loginScreen.style.opacity = '0';
-            setTimeout(() => {
-                loginScreen.style.display = 'none';
-                document.getElementById('platform-content').style.display = 'block';
-                renderSubjects(); // تشغيل المنصة
-            }, 500);
+        async function fetchSubjects() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "subjects"));
+                platformData = [];
+                querySnapshot.forEach((doc) => {
+                    platformData.push(doc.data());
+                });
+                isDataLoaded = true;
+            } catch (e) {
+                console.error("Error fetching data:", e);
+                alert("حدث خطأ في تحميل البيانات، تأكد من الانترنت");
+                document.getElementById('start-btn').style.display = 'block';
+                document.getElementById('loader').style.display = 'none';
+            }
         }
 
-        window.logout = () => {
-            if(confirm('هل تريد الخروج؟')) {
-                localStorage.removeItem('fm_user_token');
-                location.reload();
-            }
-        };
-
         window.addEventListener('load', () => {
-            if (localStorage.getItem('fm_user_token')) showPlatform();
+            fetchSubjects(); 
         });
 
-        // ========================
-        // 3. نظام العرض (Render)
-        // ========================
         const contentArea = document.getElementById('content-area');
         const sectionTitle = document.getElementById('section-title');
         const backBtn = document.getElementById('back-btn');
         
         let state = { level: 'home', subIdx: null, teachIdx: null };
 
-        // عرض المواد
         window.renderSubjects = () => {
             state.level = 'home';
-            sectionTitle.innerText = "المواد الدراسية";
+            sectionTitle.innerText = "المواد المتاحة";
             backBtn.style.display = 'none';
             contentArea.className = "grid-container";
             
+            if(platformData.length === 0) {
+                contentArea.innerHTML = '<p style="text-align:center; width:100%; color:#888;">جاري تحميل المواد...</p>';
+                return;
+            }
+
             contentArea.innerHTML = platformData.map((sub, i) => `
                 <div class="card" onclick="renderTeachers(${i})">
                     <img src="${sub.image}" class="card-img">
                     <div class="card-body">
                         <div class="card-title">${sub.name}</div>
-                        <div class="card-desc">اضغط للدخول</div>
+                        <div class="card-desc">اضغط للدخول 📚</div>
                     </div>
                 </div>
             `).join('');
         };
 
-        // عرض المدرسين
         window.renderTeachers = (i) => {
             state.level = 'teachers';
             state.subIdx = i;
@@ -355,13 +268,12 @@
                     <img src="${t.image}" class="card-img">
                     <div class="card-body">
                         <div class="card-title">${t.name}</div>
-                        <div class="card-desc">عرض الكورسات</div>
+                        <div class="card-desc">عرض الكورسات 👨‍🏫</div>
                     </div>
                 </div>
             `).join('');
         };
 
-        // عرض المجلدات
         window.renderFolders = (ti) => {
             state.level = 'folders';
             state.teachIdx = ti;
@@ -374,19 +286,18 @@
                     <div style="padding:30px; font-size:4rem;">📁</div>
                     <div class="card-body">
                         <div class="card-title">${f.title}</div>
-                        <div class="card-desc">${f.videos.length} فيديوهات</div>
+                        <div class="card-desc">${f.videos.length} فيديوهات 🎬</div>
                     </div>
                 </div>
             `).join('');
         };
 
-        // عرض الفيديوهات
         window.renderVideos = (fi) => {
             state.level = 'videos';
             const folder = platformData[state.subIdx].teachers[state.teachIdx].folders[fi];
             
             sectionTitle.innerText = folder.title;
-            contentArea.className = ""; // إزالة الجريد عشان الفيديوهات تيجي تحت بعض
+            contentArea.className = "";
             
             contentArea.innerHTML = folder.videos.map((v, vi) => `
                 <div class="video-wrapper">
@@ -403,7 +314,6 @@
             Plyr.setup('.plyr__video-embed', { controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'] });
         };
 
-        // زر الرجوع
         window.goBack = () => {
             if(state.level === 'videos') renderFolders(state.teachIdx);
             else if(state.level === 'folders') renderTeachers(state.subIdx);
@@ -412,4 +322,5 @@
 
     </script>
 </body>
-</html>
+            </html>
+            
