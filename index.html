@@ -3,213 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full Mark Two | Premium</title>
+    <title>FULL MARK TWO</title>
     
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* نظام الألوان الأزرق الغامق (Dark Mode) */
-            --bg-color: #0f172a;       /* خلفية الصفحة كحلي غامق */
-            --header-bg: #1e293b;      /* خلفية الهيدر */
-            --card-bg: #1e293b;        /* خلفية الكروت */
-            --accent-color: #38bdf8;   /* لون لبني مضيء */
-            --text-main: #f1f5f9;      /* نص أبيض */
-            --text-sec: #94a3b8;       /* نص رمادي */
-            --glow: 0 0 20px rgba(56, 189, 248, 0.15); /* توهج خفيف */
+            --neon-blue: #00e5ff; /* اللون الأزرق المضيء */
+            --bg-dark: #050505;   /* الخلفية السوداء */
+            --card-bg: #111111;   /* لون الكروت */
+            --text-color: #ffffff;
+            --glow: 0 0 15px rgba(0, 229, 255, 0.3);
         }
 
         body {
+            margin: 0; padding: 0;
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
             min-height: 100vh;
         }
 
         /* ==============================
-           1. شاشة الدخول (المطورة)
+           1. شاشة الدخول (تصميم الصورة)
            ============================== */
-        #loginOverlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-dark);
+            display: flex; justify-content: center; align-items: center;
             z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
         }
 
-        .login-box {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
+        .login-card {
+            width: 90%; max-width: 380px; padding: 40px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--neon-blue);
+            box-shadow: var(--glow);
             text-align: center;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            background: var(--card-bg);
         }
 
-        .login-title { font-size: 2rem; font-weight: 900; color: var(--accent-color); margin-bottom: 10px; }
-        .login-desc { color: var(--text-sec); margin-bottom: 30px; font-size: 0.9rem; }
-
-        .input-field {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #334155;
-            background: #0f172a;
-            color: white;
-            font-family: 'Cairo';
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 20px;
-            outline: none;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-        
-        .input-field:focus { border-color: var(--accent-color); box-shadow: var(--glow); }
-
-        .btn-main {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            background: linear-gradient(90deg, #0284c7, #38bdf8);
-            border: none;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            font-family: 'Cairo';
-            transition: 0.3s;
+        .app-title {
+            font-size: 2.5rem; font-weight: 900; color: var(--neon-blue);
+            margin: 0 0 30px 0; text-shadow: 0 0 20px var(--neon-blue);
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); }
-        .btn-main:disabled { opacity: 0.5; cursor: wait; }
+        .custom-input {
+            width: 100%; padding: 15px; border-radius: 50px;
+            border: 1px solid #333; background-color: #000;
+            color: white; text-align: center; font-size: 1.1rem;
+            font-family: 'Cairo'; margin-bottom: 20px; outline: none;
+            box-sizing: border-box; transition: 0.3s;
+        }
+
+        .custom-input:focus { border-color: var(--neon-blue); box-shadow: var(--glow); }
+
+        .login-btn {
+            width: 100%; padding: 15px; border-radius: 50px;
+            border: none; background-color: var(--neon-blue);
+            color: #000; font-weight: 800; font-size: 1.2rem;
+            cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
+        }
+        .login-btn:hover { transform: scale(1.02); box-shadow: 0 0 30px var(--neon-blue); }
 
         /* ==============================
-           2. المنصة من الداخل
+           2. المنصة الداخلية (Dark Neon)
            ============================== */
-        #mainPlatform { display: none; padding: 20px; }
+        #platform-content { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
 
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--header-bg);
-            padding: 15px 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #334155;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 30px;
         }
 
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent-color); }
-        .logout-btn { background: #dc2626; color: white; padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Cairo'; }
+        .header-title { color: var(--neon-blue); margin: 0; font-weight: 800; font-size: 1.5rem; }
+        
+        .logout-btn {
+            background: transparent; border: 1px solid #ff3333; color: #ff3333;
+            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-family: 'Cairo';
+        }
 
         /* أزرار التنقل */
-        #navBar { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
-        .back-btn { background: #334155; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; display: none; transition: 0.3s; }
-        .back-btn:hover { background: var(--accent-color); }
-        
-        #pageTitle { font-size: 1.4rem; font-weight: bold; color: white; }
+        #nav-controls { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        #back-btn {
+            display: none; background: #333; color: white; border: none;
+            padding: 8px 20px; border-radius: 50px; cursor: pointer; font-family: 'Cairo';
+        }
+        #back-btn:hover { background: var(--neon-blue); color: black; }
+        #section-title { font-size: 1.3rem; font-weight: bold; }
 
-        /* الشبكة (Grid) */
+        /* الشبكة والكروت */
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            padding-bottom: 50px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px; padding-bottom: 50px;
         }
 
-        /* الكروت */
         .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid #334155;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
+            background: var(--card-bg); border-radius: 16px; overflow: hidden;
+            border: 1px solid #333; transition: 0.3s; cursor: pointer;
             position: relative;
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateY(-5px); border-color: var(--neon-blue);
+            box-shadow: var(--glow);
         }
 
-        .card-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            filter: brightness(0.8);
-            transition: 0.3s;
-        }
-
+        .card-img { width: 100%; height: 180px; object-fit: cover; filter: brightness(0.8); }
         .card:hover .card-img { filter: brightness(1); }
 
         .card-body { padding: 20px; text-align: center; }
         .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
-        .card-sub { font-size: 0.9rem; color: var(--text-sec); }
+        .card-desc { font-size: 0.9rem; color: #888; }
 
-        /* كروت المجلدات */
-        .folder-icon {
-            font-size: 4rem; margin-bottom: 10px; display: block;
+        /* الفيديو */
+        .video-wrapper {
+            background: var(--card-bg); border-radius: 15px; overflow: hidden;
+            margin-bottom: 30px; border: 1px solid #333;
         }
-
-        /* مشغل الفيديو */
-        .video-container { max-width: 900px; margin: 0 auto; }
-        .video-item {
-            background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 30px;
-            border: 1px solid #334155;
-        }
-        .video-meta { padding: 20px; }
-        .plyr--video { --plyr-color-main: #38bdf8; }
+        .video-info { padding: 20px; }
+        .plyr--video { --plyr-color-main: #00e5ff; }
 
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay">
-        <div class="login-box">
-            <div class="login-title">Full Mark Two</div>
-            <div class="login-desc">منصة تعليمية متطورة للمرحلة الثانوية</div>
-            
-            <input type="password" id="codeIn" class="input-field" placeholder="أدخل كود الطالب" onkeypress="if(event.key==='Enter') tryLogin()">
-            <button id="loginBtn" class="btn-main" onclick="tryLogin()">تسجيل الدخول</button>
-            <p id="msg" style="color: #f87171; margin-top: 15px; display: none;"></p>
+    <div id="login-screen">
+        <div class="login-card">
+            <h1 class="app-title">FULL MARK TWO</h1>
+            <p style="color:#888; margin-bottom:10px;">أدخل كود الطالب</p>
+            <input type="password" id="code-input" class="custom-input" placeholder="الكود هنا">
+            <button class="login-btn" onclick="verifyCode()">دخول</button>
+            <div id="error-message" style="color: #ff3333; margin-top: 15px; display: none;">الكود غير صحيح</div>
         </div>
     </div>
 
-    <div id="mainPlatform">
+    <div id="platform-content">
         <header>
-            <div class="logo">💎 Full Mark 2</div>
-            <button class="logout-btn" onclick="logout()">خروج</button>
+            <div class="header-title">💎 Full Mark 2</div>
+            <button class="logout-btn" onclick="logout()">خروج 🔒</button>
         </header>
 
-        <div id="navBar">
-            <button id="backBtn" class="back-btn" onclick="goBack()">🔙 رجوع</button>
-            <div id="pageTitle">المواد الدراسية</div>
+        <div id="nav-controls">
+            <button id="back-btn" onclick="goBack()">🔙 رجوع</button>
+            <div id="section-title">المواد الدراسية</div>
         </div>
 
-        <div id="content" class="grid-container"></div>
+        <div id="content-area" class="grid-container"></div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
         import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-        // إعدادات الفايربيز بتاعتك
         const firebaseConfig = {
             apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds",
             authDomain: "full-mark-8d434.firebaseapp.com",
@@ -223,99 +173,25 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ===================================
-        // 1. نظام الدخول والحفظ التلقائي
-        // ===================================
-        
-        window.tryLogin = async (manualCode = null) => {
-            const inputField = document.getElementById('codeIn');
-            const btn = document.getElementById('loginBtn');
-            const msg = document.getElementById('msg');
-            
-            // لو مفيش كود مبعوت للدالة، هنجيبه من الحقل
-            const code = manualCode || inputField.value.trim();
-
-            if (!code) return;
-
-            if (!manualCode) { // لو دخول يدوي، شغل تأثير التحميل
-                btn.innerText = "جاري التحقق...";
-                btn.disabled = true;
-                msg.style.display = 'none';
-            }
-
-            try {
-                // البحث في قاعدة البيانات
-                const q = query(collection(db, "codes"), where("code", "==", code));
-                const snapshot = await getDocs(q);
-
-                if (!snapshot.empty) {
-                    // دخول ناجح
-                    localStorage.setItem('fm_student_code', code); // حفظ الكود في المتصفح
-                    showPlatform();
-                } else {
-                    // كود غلط
-                    if (!manualCode) {
-                        msg.innerText = "الكود غير صحيح أو منتهي!";
-                        msg.style.display = 'block';
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-                if (!manualCode) {
-                    msg.innerText = "خطأ في الاتصال بالانترنت";
-                    msg.style.display = 'block';
-                }
-            } finally {
-                if (!manualCode) {
-                    btn.innerText = "تسجيل الدخول";
-                    btn.disabled = false;
-                }
-            }
-        };
-
-        // دالة إظهار المنصة
-        function showPlatform() {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainPlatform').style.display = 'block';
-        }
-
-        // دالة الخروج
-        window.logout = () => {
-            if(confirm("هل تريد تسجيل الخروج؟ سيطلب الكود مرة أخرى.")) {
-                localStorage.removeItem('fm_student_code');
-                location.reload();
-            }
-        };
-
-        // عند فتح الصفحة: فحص هل فيه كود محفوظ؟
-        window.addEventListener('load', () => {
-            const savedCode = localStorage.getItem('fm_student_code');
-            if (savedCode) {
-                // لو فيه كود، حاول تدخل بيه في الخلفية
-                window.tryLogin(savedCode);
-            }
-        });
-
-    </script>
-
-    <script>
-        // ===================================
-        // 2. داتا المواد (كاملة)
-        // ===================================
-        const data = [
+        // ========================
+        // 1. الداتا (المواد والفيديوهات)
+        // ========================
+        const platformData = [
           {
-            id: 1, name: "الفرنساوي", 
-            img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=1000",
+            name: "الفرنساوي",
+            image: "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
             teachers: [
               {
-                id: 101, name: "مسيو انس السعيد", 
-                img: "https://cdn-icons-png.flaticon.com/512/1995/1995574.png", // صورة رمزية للمدرس
-                folders: [
+                name: "مسيو انس السعيد",
+                image: "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
+                folders: [ 
                   {
-                    title: "شرح المنهج 2026",
+                    title: "كورس شرح المنهج 2026",
                     videos: [
-                        { title: "المحاضرة الأولى: التأسيس", desc: "شرح أساسيات النطق والقواعد.", vid: "3PC1fxpp-Xk" },
-                        { title: "المحاضرة الثانية: الوحدة الأولى", desc: "كلمات ومواقف الدرس الأول.", vid: "fVJTHj5YW7Y" }
+                        { title: "جزء واحد تالتة ثانوي", desc: "بداية المنهج والقواعد الأساسية.", vid: "3PC1fxpp-Xk" },
+                        { title: "جزء اتنين تالتة ثانوي", desc: "استكمال الشرح والتدريبات.", vid: "fVJTHj5YW7Y" },
+                        { title: "جزء تلاتة تالتة ثانوي", desc: "شرح متقدم وملاحظات هامة.", vid: "Afx9AHypc7M" },
+                        { title: "الجزء الاخير تالتة ثانوي", desc: "ختام المنهج والمراجعة.", vid: "6s_TWiP1KgQ" }
                     ]
                   }
                 ]
@@ -323,17 +199,17 @@
             ]
           },
           {
-            id: 2, name: "الإيطالي", 
-            img: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=1000",
+            name: "الإيطالي",
+            image: "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
             teachers: [
               {
-                id: 201, name: "سنيور مدحت غانم", 
-                img: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                name: "سنيور مدحت غانم",
+                image: "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
                 folders: [
                    {
-                    title: "مراجعات نهائية",
+                    title: "مراجعات ليلة الامتحان",
                     videos: [
-                        { title: "المنهج كاملاً في 5 ساعات", desc: "أقوى مراجعة لليلة الامتحان.", vid: "T6hpZH5AMnk" }
+                        { title: "الإنقاذ: منهج الإيطالي كاملاً", desc: "المنهج كله في 5 ساعات بس.", vid: "T6hpZH5AMnk" }
                     ]
                    }
                 ]
@@ -341,18 +217,20 @@
             ]
           },
           {
-            id: 3, name: "الألماني", 
-            img: "https://images.unsplash.com/photo-1599946347371-68eb71b16afc?auto=format&fit=crop&q=80&w=1000",
+            name: "الألماني",
+            image: "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
             teachers: [
               {
-                id: 301, name: "هير ياسين ابو الزيد", 
-                img: "https://cdn-icons-png.flaticon.com/512/1995/1995574.png",
+                name: "هير ياسين ابو الزيد",
+                image: "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
                 folders: [
                     {
-                        title: "كورس التأسيس",
+                        title: "كورس التأسيس والشرح",
                         videos: [
-                            { title: "الحروف والنطق", desc: "بداية اللغة الألمانية.", vid: "JOLc4Jc9yFU" },
-                            { title: "الجراماتيك", desc: "قواعد الجملة.", vid: "L2irLAg7jHM" }
+                            { title: "اللغة الألمانية - ج1", desc: "الأساسيات وقواعد النطق.", vid: "JOLc4Jc9yFU" },
+                            { title: "اللغة الألمانية - ج2", desc: "الجراماتيك وتريكات الامتحانات.", vid: "L2irLAg7jHM" },
+                            { title: "اللغة الألمانية - ج3", desc: "المواقف الحياتية.", vid: "I-3VLcEoCP8" },
+                            { title: "اللغة الألمانية - ج4", desc: "حل تدريبات شاملة.", vid: "oRopKQ63a-I" }
                         ]
                     }
                 ]
@@ -360,17 +238,17 @@
             ]
           },
           {
-            id: 4, name: "الإسباني", 
-            img: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?auto=format&fit=crop&q=80&w=1000",
+            name: "الإسباني",
+            image: "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
             teachers: [
               {
-                id: 401, name: "سنيور ماجد فارس", 
-                img: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                name: "سنيور ماجد فارس",
+                image: "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
                 folders: [
                     {
-                        title: "الخلاصة",
+                        title: "المراجعة النهائية",
                         videos: [
-                             { title: "شرح المنهج كاملاً", desc: "فيديو واحد لامم الدنيا.", vid: "K9ZOydc1cqs" }
+                             { title: "شرح المنهج كاملاً", desc: "فيديو واحد فيه الخلاصة.", vid: "K9ZOydc1cqs" }
                         ]
                     }
                 ]
@@ -379,110 +257,158 @@
           }
         ];
 
-        // ===================================
-        // 3. التحكم في العرض
-        // ===================================
-        const content = document.getElementById('content');
-        const title = document.getElementById('pageTitle');
-        const backBtn = document.getElementById('backBtn');
-        
-        let path = { level: 'home', subIdx: null, teachIdx: null };
+        // ========================
+        // 2. نظام تسجيل الدخول
+        // ========================
+        window.verifyCode = async () => {
+            const codeInput = document.getElementById('code-input');
+            const btn = document.querySelector('.login-btn');
+            const errorMsg = document.getElementById('error-message');
+            const code = codeInput.value.trim();
 
-        // 1. المواد
-        function renderSubjects() {
-            path.level = 'home';
-            title.innerText = "اختر المادة الدراسية";
+            if (!code) return;
+
+            btn.innerHTML = "جاري التحقق...";
+            btn.style.opacity = "0.7";
+            errorMsg.style.display = 'none';
+
+            try {
+                const q = query(collection(db, "codes"), where("code", "==", code));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    localStorage.setItem('fm_user_token', code);
+                    showPlatform();
+                } else {
+                    errorMsg.style.display = 'block';
+                    btn.innerHTML = "دخول";
+                    btn.style.opacity = "1";
+                }
+            } catch (e) {
+                console.error(e);
+                errorMsg.innerText = "خطأ في الاتصال!";
+                errorMsg.style.display = 'block';
+                btn.innerHTML = "دخول";
+            }
+        };
+
+        function showPlatform() {
+            const loginScreen = document.getElementById('login-screen');
+            loginScreen.style.transition = 'opacity 0.5s';
+            loginScreen.style.opacity = '0';
+            setTimeout(() => {
+                loginScreen.style.display = 'none';
+                document.getElementById('platform-content').style.display = 'block';
+                renderSubjects(); // تشغيل المنصة
+            }, 500);
+        }
+
+        window.logout = () => {
+            if(confirm('هل تريد الخروج؟')) {
+                localStorage.removeItem('fm_user_token');
+                location.reload();
+            }
+        };
+
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('fm_user_token')) showPlatform();
+        });
+
+        // ========================
+        // 3. نظام العرض (Render)
+        // ========================
+        const contentArea = document.getElementById('content-area');
+        const sectionTitle = document.getElementById('section-title');
+        const backBtn = document.getElementById('back-btn');
+        
+        let state = { level: 'home', subIdx: null, teachIdx: null };
+
+        // عرض المواد
+        window.renderSubjects = () => {
+            state.level = 'home';
+            sectionTitle.innerText = "المواد الدراسية";
             backBtn.style.display = 'none';
-            content.className = "grid-container";
-            content.innerHTML = data.map((sub, i) => `
+            contentArea.className = "grid-container";
+            
+            contentArea.innerHTML = platformData.map((sub, i) => `
                 <div class="card" onclick="renderTeachers(${i})">
-                    <img src="${sub.img}" class="card-img" alt="${sub.name}">
+                    <img src="${sub.image}" class="card-img">
                     <div class="card-body">
                         <div class="card-title">${sub.name}</div>
-                        <div class="card-sub">اضغط للدخول</div>
+                        <div class="card-desc">اضغط للدخول</div>
                     </div>
                 </div>
             `).join('');
-        }
+        };
 
-        // 2. المدرسين
+        // عرض المدرسين
         window.renderTeachers = (i) => {
-            path.level = 'teachers';
-            path.subIdx = i;
-            const sub = data[i];
+            state.level = 'teachers';
+            state.subIdx = i;
+            const sub = platformData[i];
             
-            title.innerText = `مدرسين مادة: ${sub.name}`;
+            sectionTitle.innerText = `مدرسين مادة: ${sub.name}`;
             backBtn.style.display = 'block';
-            content.className = "grid-container";
             
-            if(!sub.teachers.length) {
-                content.innerHTML = '<p style="text-align:center; width:100%;">لا يوجد مدرسين حالياً</p>'; return;
-            }
-
-            content.innerHTML = sub.teachers.map((t, ti) => `
+            contentArea.innerHTML = sub.teachers.map((t, ti) => `
                 <div class="card" onclick="renderFolders(${ti})">
-                    <div style="padding:20px; text-align:center;">
-                        <img src="${t.img}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">
-                    </div>
+                    <img src="${t.image}" class="card-img">
                     <div class="card-body">
                         <div class="card-title">${t.name}</div>
-                        <div class="card-sub">عرض الكورسات</div>
+                        <div class="card-desc">عرض الكورسات</div>
                     </div>
                 </div>
             `).join('');
-        }
+        };
 
-        // 3. المجلدات
+        // عرض المجلدات
         window.renderFolders = (ti) => {
-            path.level = 'folders';
-            path.teachIdx = ti;
-            const teacher = data[path.subIdx].teachers[ti];
+            state.level = 'folders';
+            state.teachIdx = ti;
+            const teacher = platformData[state.subIdx].teachers[ti];
             
-            title.innerText = `كورسات: ${teacher.name}`;
-            content.innerHTML = teacher.folders.map((f, fi) => `
+            sectionTitle.innerText = `كورسات: ${teacher.name}`;
+            
+            contentArea.innerHTML = teacher.folders.map((f, fi) => `
                 <div class="card" onclick="renderVideos(${fi})">
-                     <div style="padding:30px; text-align:center; background:#0f172a;">
-                        <span style="font-size:4rem;">📁</span>
-                    </div>
+                    <div style="padding:30px; font-size:4rem;">📁</div>
                     <div class="card-body">
                         <div class="card-title">${f.title}</div>
-                        <div class="card-sub">${f.videos.length} فيديو</div>
+                        <div class="card-desc">${f.videos.length} فيديوهات</div>
                     </div>
                 </div>
             `).join('');
-        }
+        };
 
-        // 4. الفيديوهات
+        // عرض الفيديوهات
         window.renderVideos = (fi) => {
-            path.level = 'videos';
-            const folder = data[path.subIdx].teachers[path.teachIdx].folders[fi];
+            state.level = 'videos';
+            const folder = platformData[state.subIdx].teachers[state.teachIdx].folders[fi];
             
-            title.innerText = folder.title;
-            content.className = "video-container";
+            sectionTitle.innerText = folder.title;
+            contentArea.className = ""; // إزالة الجريد عشان الفيديوهات تيجي تحت بعض
             
-            content.innerHTML = folder.videos.map((v, vi) => `
-                <div class="video-item">
+            contentArea.innerHTML = folder.videos.map((v, vi) => `
+                <div class="video-wrapper">
                     <div class="plyr__video-embed" id="player-${vi}">
                         <iframe src="https://www.youtube.com/embed/${v.vid}?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
                     </div>
-                    <div class="video-meta">
+                    <div class="video-info">
                         <div class="card-title">🎥 ${v.title}</div>
-                        <div style="color:#94a3b8; font-size:0.9rem;">${v.desc}</div>
+                        <div style="color:#aaa;">${v.desc}</div>
                     </div>
                 </div>
             `).join('');
 
             Plyr.setup('.plyr__video-embed', { controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'] });
-        }
+        };
 
+        // زر الرجوع
         window.goBack = () => {
-            if(path.level === 'videos') renderFolders(path.teachIdx);
-            else if(path.level === 'folders') renderTeachers(path.subIdx);
-            else if(path.level === 'teachers') renderSubjects();
-        }
-
-        // التشغيل المبدئي
-        renderSubjects();
+            if(state.level === 'videos') renderFolders(state.teachIdx);
+            else if(state.level === 'folders') renderTeachers(state.subIdx);
+            else if(state.level === 'teachers') renderSubjects();
+        };
 
     </script>
 </body>
