@@ -2,151 +2,198 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة Full Mark | Player Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Full Mark | Player Hub</title>
     
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --main-color: #2563eb;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        h1 { margin: 0; color: var(--main-color); font-size: 2rem; }
+        /* --- ثيم النيون الأزرق --- */
+        :root { --main: #00e1ff; --bg: #02050a; --card-bg: #0a0f18; --text: #fff; }
         
-        #backBtn {
-            display: none;
-            background-color: white;
-            color: var(--main-color);
-            border: 2px solid var(--main-color);
-            padding: 10px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 20px;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+        
+        body { background: linear-gradient(135deg, #02050a 0%, #050a14 100%); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+        /* --- شاشة الدخول --- */
+        #loginSection {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, #1a2332 0%, #000000 100%);
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
+        }
+        .login-card {
+            background: rgba(10, 15, 24, 0.9); border: 2px solid var(--main); padding: 40px; 
+            border-radius: 20px; width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 0 50px rgba(0, 225, 255, 0.2); backdrop-filter: blur(10px);
+        }
+        .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main); }
+        .login-input {
+            width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
+            border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; outline: none; margin-bottom: 20px;
             transition: 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        #backBtn:hover { background-color: var(--main-color); color: white; }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            padding-bottom: 50px;
+        .login-input:focus { border-color: var(--main); box-shadow: 0 0 15px rgba(0, 225, 255, 0.3); }
+        .login-btn {
+            width: 100%; padding: 15px; background: var(--main); color: #000; border: none; 
+            border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
+        .login-btn:hover { background: #fff; box-shadow: 0 0 20px var(--main); }
+        .error-msg { color: #ff3333; margin-top: 15px; display: none; }
 
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            border: 1px solid #f1f5f9;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-
-        /* تنسيق خاص لكروت المجلدات/الكورسات */
-        .folder-card .card-img {
-            height: 140px; 
-            object-fit: contain;
-            padding: 20px;
-            background: #f8fafc;
-        }
-
-        .card-body { padding: 20px; text-align: center; }
-        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: #334155; }
-        .card-desc { font-size: 0.9rem; color: #64748b; }
-
-        /* تنسيق الفيديو */
-        .video-wrapper {
-            max-width: 800px;
-            margin: 0 auto 40px auto;
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
+        /* --- المنصة --- */
+        #platformSection { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
         
-        .video-info { padding: 20px; }
-        .video-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
-        
-        /* تحسين شكل Plyr */
-        .plyr--video {
-            border-radius: 16px 16px 0 0;
-            --plyr-color-main: #2563eb;
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(10, 15, 24, 0.95); border-bottom: 2px solid var(--main);
+            padding: 15px 20px; border-radius: 20px; margin-bottom: 25px; 
+            box-shadow: 0 0 30px rgba(0, 225, 255, 0.1);
         }
-        
-        /* إخفاء عناصر يوتيوب المزعجة */
-        .plyr__video-embed iframe {
-            top: -50%;
-            height: 200%;
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--main); text-shadow: 0 0 10px var(--main); }
+        .logout-btn { color: #ff3333; border: 1px solid #ff3333; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { background: #ff3333; color: #fff; }
+
+        .nav-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        h2 { font-size: 1.4rem; color: #fff; border-right: 4px solid var(--main); padding-right: 12px; margin: 0; }
+        #backBtn { 
+            display: none; background: transparent; color: var(--main); border: 2px solid var(--main); 
+            padding: 5px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; 
         }
+        #backBtn:hover { background: var(--main); color: #000; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        
+        .card { 
+            background: var(--card-bg); border: 1px solid rgba(0, 225, 255, 0.15); border-radius: 15px; 
+            overflow: hidden; cursor: pointer; transition: 0.3s; position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--main); box-shadow: 0 0 20px rgba(0, 225, 255, 0.2); }
+        
+        .card-img-container { width: 100%; height: 180px; background: #000; display: flex; align-items: center; justify-content: center; padding: 10px; }
+        .card-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .card-title { padding: 15px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #fff; background: #0f121a; border-top: 1px solid rgba(255,255,255,0.1); }
+        .card-desc { font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+        /* الفولدر */
+        .folder-card .card-img { width: 60%; opacity: 0.8; }
+
+        /* الفيديو */
+        .video-list { display: flex; flex-direction: column; gap: 25px; }
+        .video-wrapper { background: #000; border-radius: 15px; overflow: hidden; border: 1px solid #333; position: relative; }
+        .video-info { padding: 15px; background: #111; border-bottom: 1px solid #333; }
+        .video-title { color: var(--main); font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        .video-desc { color: #aaa; font-size: 0.9rem; }
+
+        /* العلامة المائية للحماية */
+        .watermark {
+            position: absolute; top: 20px; left: 20px; 
+            color: rgba(255,255,255,0.2); font-size: 1.5rem; font-weight: bold; 
+            pointer-events: none; z-index: 100;
+            animation: moveWatermark 8s infinite alternate;
+        }
+        @keyframes moveWatermark {
+            0% { top: 10%; left: 10%; }
+            100% { top: 80%; left: 80%; }
+        }
+
+        /* رسالة الحظر */
+        #banScreen { 
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: #000; z-index: 10000; color: #ff3333; 
+            flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+        #banScreen i { font-size: 4rem; margin-bottom: 20px; }
+        #banScreen h1 { font-size: 2rem; }
+
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <div id="banScreen">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h1>تم كشف محاولة اختراق</h1>
+        <p>تم تسجيل الـ IP الخاص بك وسيتم حظر الكود.</p>
+    </div>
 
-    <header>
-        <h1>🎓 Full Mark Platform</h1>
-    </header>
+    <div id="loginSection">
+        <div class="login-card">
+            <div class="login-logo">FULL MARK</div>
+            <p style="color:#888; margin-bottom:20px;">أدخل كود الطالب للدخول</p>
+            <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
+            <button class="login-btn" onclick="attemptLogin()">تسجيل الدخول</button>
+            <div id="loginMsg" class="error-msg"></div>
+        </div>
+    </div>
 
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <button id="backBtn" onclick="goBack()">🔙 رجوع</button>
-        <h2 id="sectionTitle" style="margin-bottom: 20px; color: #475569;">اختر المادة</h2>
-        <div id="contentArea" class="grid-container"></div>
+    <div id="platformSection">
+        <header>
+            <div class="logo">FULL MARK</div>
+            <div style="display:flex; gap:10px; align-items: center;">
+                <div style="text-align:left;">
+                    <div id="studentNameDisplay" style="font-weight:bold; font-size:0.9rem;">طالب</div>
+                    <div id="studentCodeDisplay" style="color:var(--main); font-size:0.8rem; font-family:monospace;">...</div>
+                </div>
+                <div class="logout-btn" onclick="logout()"><i class="fas fa-power-off"></i></div>
+            </div>
+        </header>
+
+        <div class="nav-bar">
+            <h2 id="sectionTitle">اختر المادة</h2>
+            <button id="backBtn" onclick="goBack()">رجوع 🔙</button>
+        </div>
+
+        <div id="contentArea" class="grid"></div>
+        <div style="height: 50px;"></div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 
     <script>
         // ==========================================
-        // 1. الداتا الجديدة (نظام المجلدات)
+        // 1. نظام الحماية (Anti-Hack)
         // ==========================================
         
+        // منع أدوات المطور
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        }
+
+        // كشف تغيير حجم الشاشة (فتح الكونسول)
+        window.addEventListener('resize', function(){
+            if((window.outerWidth - window.innerWidth) > 100) {
+                document.getElementById('banScreen').style.display = 'flex';
+                document.getElementById('platformSection').remove(); // تدمير المحتوى
+            }
+        });
+
+        // ==========================================
+        // 2. قاعدة البيانات (Data)
+        // ==========================================
+        
+        // الأكواد المسموح بها (تقدر تزود هنا)
+        const VALID_CODES = {
+            '100200': 'أحمد محمد',
+            '556677': 'مريم علي',
+            'admin': 'Admin User'
+        };
+
         const platformData = [
           {
-            "id": 1,
             "name": "الفرنساوي",
             "image": "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
             "teachers": [
               {
-                "id": 101,
                 "name": "مسيو انس السعيد",
                 "image": "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
-                "folders": [ // هنا عملنا فولدرات بدل الفيديوهات علطول
+                "folders": [
                   {
-                    "id": "f1",
                     "title": "كورس شرح المنهج 2026",
-                    "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", // أيقونة فولدر
+                    "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
                     "videos": [
                         { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج والقواعد الأساسية.", "vid": "3PC1fxpp-Xk" },
                         { "title": "جزء اتنين تالتة ثانوي", "desc": "استكمال الشرح والتدريبات.", "vid": "fVJTHj5YW7Y" },
@@ -159,19 +206,16 @@
             ]
           },
           {
-            "id": 2,
             "name": "الإيطالي",
             "image": "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
             "teachers": [
               {
-                "id": 201,
                 "name": "سنيور مدحت غانم",
                 "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
                 "folders": [
                    {
-                    "id": "f2",
                     "title": "مراجعات ليلة الامتحان",
-                    "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
+                    "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
                     "videos": [
                         { "title": "الإنقاذ: منهج الإيطالي كاملاً", "desc": "المنهج كله في 5 ساعات بس.", "vid": "T6hpZH5AMnk" }
                     ]
@@ -181,17 +225,14 @@
             ]
           },
           {
-            "id": 3,
             "name": "الألماني",
             "image": "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
             "teachers": [
               {
-                "id": 301,
                 "name": "هير ياسين ابو الزيد",
                 "image": "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
                 "folders": [
                     {
-                        "id": "f3",
                         "title": "كورس التأسيس والشرح",
                         "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
                         "videos": [
@@ -206,19 +247,16 @@
             ]
           },
           {
-            "id": 4,
             "name": "الإسباني",
             "image": "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
             "teachers": [
               {
-                "id": 401,
                 "name": "سنيور ماجد فارس",
                 "image": "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
                 "folders": [
                     {
-                        "id": "f4",
                         "title": "المراجعة النهائية",
-                        "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
+                        "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
                         "videos": [
                              { "title": "شرح المنهج كاملاً", "desc": "فيديو واحد فيه الخلاصة.", "vid": "K9ZOydc1cqs" }
                         ]
@@ -230,148 +268,137 @@
         ];
 
         // ==========================================
-        // 2. منطق العرض (4 مستويات)
+        // 3. منطق التطبيق (Logic)
         // ==========================================
 
+        // التحقق من الدخول عند الفتح
+        window.onload = function() {
+            const savedCode = localStorage.getItem('fm_user_code');
+            if(savedCode && VALID_CODES[savedCode]) {
+                showPlatform(savedCode, VALID_CODES[savedCode]);
+            }
+        }
+
+        function attemptLogin() {
+            const code = document.getElementById('codeParams').value.trim();
+            const msg = document.getElementById('loginMsg');
+            
+            if(VALID_CODES[code]) {
+                localStorage.setItem('fm_user_code', code);
+                showPlatform(code, VALID_CODES[code]);
+            } else {
+                msg.style.display = 'block';
+                msg.innerText = "كود خاطئ! حاول مرة أخرى.";
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('fm_user_code');
+            location.reload();
+        }
+
+        function showPlatform(code, name) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('platformSection').style.display = 'block';
+            document.getElementById('studentNameDisplay').innerText = name;
+            document.getElementById('studentCodeDisplay').innerText = code;
+            
+            renderSubjects(); // بدء التطبيق
+        }
+
+        // --- التنقل ---
         const contentArea = document.getElementById('contentArea');
         const sectionTitle = document.getElementById('sectionTitle');
         const backBtn = document.getElementById('backBtn');
-        
-        // المتغيرات دي عشان نحفظ إحنا واقفين فين
-        let state = {
-            level: 'subjects', // subjects, teachers, folders, videos
-            subjectIdx: null,
-            teacherIdx: null,
-            folderIdx: null
-        };
+        let currentUserCode = localStorage.getItem('fm_user_code');
 
-        // 1. عرض المواد
-        function showSubjects() {
+        let state = { level: 'subjects', subjectIdx: null, teacherIdx: null, folderIdx: null };
+
+        // 1. المواد
+        function renderSubjects() {
             state.level = 'subjects';
             sectionTitle.innerText = "اختر المادة";
             backBtn.style.display = 'none';
-            contentArea.className = "grid-container"; // نرجع للشبكة
-            contentArea.innerHTML = '';
-
-            platformData.forEach((subject, index) => {
-                contentArea.innerHTML += `
-                    <div class="card" onclick="showTeachers(${index})">
-                        <img src="${subject.image}" class="card-img" alt="${subject.name}">
-                        <div class="card-body">
-                            <div class="card-title">${subject.name}</div>
-                            <div class="card-desc">اضغط لعرض المدرسين</div>
-                        </div>
-                    </div>
-                `;
-            });
+            contentArea.className = "grid";
+            contentArea.innerHTML = platformData.map((sub, i) => `
+                <div class="card" onclick="renderTeachers(${i})">
+                    <div class="card-img-container"><img src="${sub.image}" class="card-img"></div>
+                    <div class="card-title">${sub.name}</div>
+                </div>
+            `).join('');
         }
 
-        // 2. عرض المدرسين
-        function showTeachers(idx) {
+        // 2. المدرسين
+        window.renderTeachers = function(subIdx) {
             state.level = 'teachers';
-            state.subjectIdx = idx;
-            const subject = platformData[idx];
+            state.subjectIdx = subIdx;
+            const sub = platformData[subIdx];
+            sectionTitle.innerText = sub.name;
+            backBtn.style.display = 'block';
             
-            sectionTitle.innerText = `مدرسين مادة ${subject.name}`;
-            backBtn.style.display = 'inline-block';
-            contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
+            if(sub.teachers.length === 0) { contentArea.innerHTML = '<div class="empty-msg">لا يوجد مدرسين</div>'; return; }
 
-            if(subject.teachers.length === 0) contentArea.innerHTML = '<p>لا يوجد بيانات.</p>';
-
-            subject.teachers.forEach((teacher, tIndex) => {
-                contentArea.innerHTML += `
-                    <div class="card" onclick="showFolders(${tIndex})">
-                        <img src="${teacher.image}" class="card-img" alt="${teacher.name}">
-                        <div class="card-body">
-                            <div class="card-title">${teacher.name}</div>
-                            <div class="card-desc">اضغط لعرض الكورسات</div>
-                        </div>
-                    </div>
-                `;
-            });
+            contentArea.innerHTML = sub.teachers.map((t, i) => `
+                <div class="card" onclick="renderFolders(${i})">
+                    <div class="card-img-container"><img src="${t.image}" class="card-img"></div>
+                    <div class="card-title">${t.name}</div>
+                </div>
+            `).join('');
         }
 
-        // 3. عرض المجلدات (الكورسات) - الخطوة الجديدة
-        function showFolders(tIndex) {
+        // 3. الكورسات (الفولدرات)
+        window.renderFolders = function(tIdx) {
             state.level = 'folders';
-            state.teacherIdx = tIndex;
-            const teacher = platformData[state.subjectIdx].teachers[tIndex];
+            state.teacherIdx = tIdx;
+            const teacher = platformData[state.subjectIdx].teachers[tIdx];
+            sectionTitle.innerText = teacher.name;
             
-            sectionTitle.innerText = `كورسات: ${teacher.name}`;
-            contentArea.className = "grid-container";
-            contentArea.innerHTML = '';
+            if(!teacher.folders || teacher.folders.length === 0) { contentArea.innerHTML = '<div class="empty-msg">لا يوجد كورسات</div>'; return; }
 
-            if(!teacher.folders || teacher.folders.length === 0) {
-                contentArea.innerHTML = '<p>لا يوجد كورسات حالياً.</p>';
-                return;
-            }
-
-            teacher.folders.forEach((folder, fIndex) => {
-                contentArea.innerHTML += `
-                    <div class="card folder-card" onclick="showVideos(${fIndex})">
-                        <img src="${folder.image}" class="card-img" alt="Folder">
-                        <div class="card-body">
-                            <div class="card-title">${folder.title}</div>
-                            <div class="card-desc">${folder.videos.length} فيديوهات</div>
-                        </div>
-                    </div>
-                `;
-            });
+            contentArea.innerHTML = teacher.folders.map((f, i) => `
+                <div class="card folder-card" onclick="renderVideos(${i})">
+                    <div class="card-img-container" style="background:#0f121a;"><img src="${f.image}" class="card-img" style="width:60%;"></div>
+                    <div class="card-title">${f.title}</div>
+                    <div style="text-align:center; padding-bottom:10px; color:#888; font-size:0.8rem;">${f.videos.length} فيديو</div>
+                </div>
+            `).join('');
         }
 
-        // 4. عرض الفيديوهات (المشغل)
-        function showVideos(fIndex) {
+        // 4. الفيديوهات
+        window.renderVideos = function(fIdx) {
             state.level = 'videos';
-            state.folderIdx = fIndex;
-            const folder = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[fIndex];
-            
+            state.folderIdx = fIdx;
+            const folder = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[fIdx];
             sectionTitle.innerText = folder.title;
-            // بنلغي ال Grid هنا عشان الفيديوهات تيجي تحت بعض بشكل قائمة كبيرة
-            contentArea.className = ""; 
-            contentArea.innerHTML = '';
+            contentArea.className = "video-list"; // تغيير العرض لقائمة
 
-            folder.videos.forEach((video, vIndex) => {
-                // لاحظ إعدادات الرابط هنا لتقليل ظهور يوتيوب
-                contentArea.innerHTML += `
-                    <div class="video-wrapper">
-                        <div class="plyr__video-embed" id="player-${vIndex}">
-                            <iframe
-                                src="https://www.youtube.com/embed/${video.vid}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
-                                allowfullscreen
-                                allowtransparency
-                                allow="autoplay"
-                            ></iframe>
-                        </div>
-                        <div class="video-info">
-                            <div class="video-title">🎥 ${video.title}</div>
-                            <div style="color:#666;">${video.desc}</div>
-                        </div>
+            contentArea.innerHTML = folder.videos.map((v, i) => `
+                <div class="video-wrapper">
+                    <div class="video-info">
+                        <div class="video-title">${v.title}</div>
+                        <div class="video-desc">${v.desc}</div>
                     </div>
-                `;
-            });
+                    <div class="plyr__video-embed" id="player-${i}">
+                        <iframe src="https://www.youtube.com/embed/${v.vid}?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+                        <div class="watermark">${currentUserCode || 'FullMark'}</div>
+                    </div>
+                </div>
+            `).join('');
 
-            // تفعيل المشغل
-            Plyr.setup('.plyr__video-embed', {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1 }
-            });
+            // تفعيل المشغلات
+            setTimeout(() => {
+                const players = Array.from(document.querySelectorAll('.plyr__video-embed')).map(p => new Plyr(p));
+            }, 100);
         }
 
-        // زرار الرجوع الذكي
-        function goBack() {
-            if (state.level === 'videos') {
-                showFolders(state.teacherIdx);
-            } else if (state.level === 'folders') {
-                showTeachers(state.subjectIdx);
-            } else if (state.level === 'teachers') {
-                showSubjects();
-            }
+        // الرجوع
+        window.goBack = function() {
+            if (state.level === 'videos') renderFolders(state.teacherIdx);
+            else if (state.level === 'folders') renderTeachers(state.subjectIdx);
+            else if (state.level === 'teachers') renderSubjects();
         }
-
-        // البداية
-        showSubjects();
 
     </script>
 </body>
-</html>
+                                       </html>
+    
