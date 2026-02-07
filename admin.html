@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | Full Mark 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background: #f0f9ff; padding: 20px; color: #334155; }
+        .container { max-width: 600px; margin: 0 auto; }
+        
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(14, 165, 233, 0.1); }
+        h2 { color: #0ea5e9; text-align: center; margin-top: 0; }
+        
+        .input-group { display: flex; gap: 10px; margin-bottom: 30px; }
+        input { flex: 1; padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Cairo'; }
+        button { padding: 15px 30px; border-radius: 10px; border: none; background: #0ea5e9; color: white; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0284c7; }
+
+        .code-list { list-style: none; padding: 0; }
+        .code-item { 
+            background: #f8fafc; padding: 15px; margin-bottom: 10px; border-radius: 10px; 
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0;
+        }
+        .delete-btn { background: #ef4444; padding: 8px 15px; font-size: 0.9rem; }
+        .delete-btn:hover { background: #dc2626; }
+        
+        .status { text-align: center; margin-bottom: 15px; color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>🔑 إدارة أكواد الطلاب</h2>
+        <div id="statusMsg" class="status"></div>
+        
+        <div class="input-group">
+            <input type="text" id="newCode" placeholder="اكتب الكود الجديد هنا (مثلاً: student_101)">
+            <button onclick="addCode()">إضافة</button>
+        </div>
+
+        <h3>الأكواد المفعلة حالياً:</h3>
+        <ul id="codesList" class="code-list">
+            <p style="text-align:center; color:#999;">جاري التحميل...</p>
+        </ul>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds",
+        authDomain: "full-mark-8d434.firebaseapp.com",
+        projectId: "full-mark-8d434",
+        storageBucket: "full-mark-8d434.firebasestorage.app",
+        messagingSenderId: "802579483999",
+        appId: "1:802579483999:web:cf73136ffbd75d5e0ebaea",
+        measurementId: "G-26F9W89TB8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // دالة إضافة كود
+    window.addCode = async () => {
+        const codeInput = document.getElementById('newCode');
+        const codeValue = codeInput.value.trim();
+
+        if(!codeValue) return alert("اكتب كود الأول!");
+
+        try {
+            await addDoc(collection(db, "codes"), {
+                code: codeValue,
+                createdAt: new Date()
+            });
+            codeInput.value = '';
+            showStatus("تمت إضافة الكود بنجاح ✅");
+        } catch (e) {
+            alert("حصل مشكلة: " + e.message);
+        }
+    }
+
+    // دالة حذف كود
+    window.deleteCode = async (id) => {
+        if(confirm("متحأكد عايز تمسح الكود ده؟ الطالب مش هيعرف يدخل بيه تاني.")) {
+            await deleteDoc(doc(db, "codes", id));
+            showStatus("تم حذف الكود 🗑️");
+        }
+    }
+
+    // عرض الأكواد بشكل مباشر (Realtime)
+    const q = query(collection(db, "codes"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const list = document.getElementById('codesList');
+        list.innerHTML = '';
+        
+        if (snapshot.empty) {
+            list.innerHTML = '<p style="text-align:center;">مفيش أكواد لسه.</p>';
+        }
+
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            list.innerHTML += `
+                <li class="code-item">
+                    <span>👤 ${data.code}</span>
+                    <button class="delete-btn" onclick="deleteCode('${doc.id}')">حذف</button>
+                </li>
+            `;
+        });
+    });
+
+    function showStatus(msg) {
+        const el = document.getElementById('statusMsg');
+        el.innerText = msg;
+        setTimeout(() => el.innerText = '', 3000);
+    }
+</script>
+
+</body>
+</html>
