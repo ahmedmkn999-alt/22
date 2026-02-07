@@ -11,54 +11,43 @@
     
     <style>
         :root {
-            --main-color: #00e1ff; /* النيون الأزرق */
-            --bg-color: #02050a;   /* الخلفية السوداء */
-            --card-bg: #0a0f18;    /* لون الكروت الغامق */
-            --text-color: #ffffff;
+            --main-color: #00e1ff; --bg-color: #02050a; --card-bg: #0a0f18; --text-color: #ffffff;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #02050a 0%, #050a14 100%);
             color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0; padding: 20px; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- شاشة الدخول (تم الإصلاح) --- */
+        /* --- شاشة الدخول --- */
         #loginSection {
             height: 100vh; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #1a2332 0%, #000000 100%);
-            position: fixed; top: 0; left: 0; width: 100%; 
-            z-index: 9999; /* رقم عالي جداً */
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
         }
         .login-card {
             background: rgba(10, 15, 24, 0.95); border: 2px solid var(--main-color); padding: 40px; 
             border-radius: 20px; width: 90%; max-width: 400px; text-align: center;
             box-shadow: 0 0 50px rgba(0, 225, 255, 0.2); backdrop-filter: blur(10px);
-            position: relative; z-index: 10000; /* عشان نضمن إنه فوق الخلفية */
         }
         .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main-color); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main-color); }
         .login-input {
             width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
             border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; outline: none; margin-bottom: 20px;
-            position: relative; z-index: 10001; /* فوق الكارد */
         }
         .login-btn {
             width: 100%; padding: 15px; background: var(--main-color); color: #000; border: none; 
             border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
-            position: relative; z-index: 10001; /* فوق الكارد */
         }
         .login-btn:hover { background: #fff; box-shadow: 0 0 20px var(--main-color); }
-        .login-btn:active { transform: scale(0.98); }
         .error-msg { color: #ff3333; margin-top: 15px; font-weight: bold; display: none; }
 
         /* --- شاشة الترحيب --- */
         #welcomeSection {
             display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center;
-            background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 9000;
+            background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 1999;
         }
         .counter-circle {
             width: 120px; height: 120px; border: 5px solid var(--main-color); border-radius: 50%;
@@ -73,11 +62,8 @@
         #platformSection { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
         header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--main-color);
-            position: relative;
+            text-align: center; margin-bottom: 30px; padding-bottom: 20px;
+            border-bottom: 2px solid var(--main-color); position: relative;
             display: flex; justify-content: space-between; align-items: center;
         }
 
@@ -91,57 +77,28 @@
         .logout-btn { border-color: #ff3333; color: #ff3333; }
 
         #backBtn {
-            display: none;
-            background-color: transparent;
-            color: var(--main-color);
-            border: 2px solid var(--main-color);
-            padding: 8px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 20px;
-            transition: 0.3s;
+            display: none; background-color: transparent; color: var(--main-color);
+            border: 2px solid var(--main-color); padding: 8px 25px; border-radius: 50px;
+            cursor: pointer; font-weight: bold; margin-bottom: 20px; transition: 0.3s;
         }
         #backBtn:hover { background-color: var(--main-color); color: #000; }
 
         h2#sectionTitle { color: #fff; border-right: 4px solid var(--main-color); padding-right: 10px; margin-bottom: 20px; }
 
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-            padding-bottom: 50px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; padding-bottom: 50px;
         }
 
         .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            border: 1px solid rgba(0, 225, 255, 0.15);
+            background-color: var(--card-bg); border-radius: 16px; overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer; border: 1px solid rgba(0, 225, 255, 0.15);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(0, 225, 255, 0.2);
-            border-color: var(--main-color);
-        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 0 20px rgba(0, 225, 255, 0.2); border-color: var(--main-color); }
 
-        .card-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-
-        /* تنسيق خاص لكروت المجلدات/الكورسات */
-        .folder-card .card-img {
-            height: 140px; 
-            object-fit: contain;
-            padding: 20px;
-            background: #000;
-        }
+        .card-img { width: 100%; height: 180px; object-fit: cover; }
+        .folder-card .card-img { height: 140px; object-fit: contain; padding: 20px; background: #000; }
 
         .card-body { padding: 20px; text-align: center; }
         .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: #fff; }
@@ -149,12 +106,8 @@
 
         /* تنسيق الفيديو */
         .video-wrapper {
-            max-width: 800px;
-            margin: 0 auto 40px auto;
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid #333;
+            max-width: 800px; margin: 0 auto 40px auto; background: #000;
+            border-radius: 16px; overflow: hidden; border: 1px solid #333;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
         
@@ -162,27 +115,14 @@
         .video-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; color: var(--main-color); }
         .video-desc { color: #aaa; }
         
-        /* تحسين شكل Plyr */
-        .plyr--video {
-            border-radius: 0 0 16px 16px;
-            --plyr-color-main: #00e1ff;
-        }
-        
-        /* إخفاء عناصر يوتيوب المزعجة */
-        .plyr__video-embed iframe {
-            top: -50%;
-            height: 200%;
-        }
+        .plyr--video { border-radius: 0 0 16px 16px; --plyr-color-main: #00e1ff; }
+        .plyr__video-embed iframe { top: -50%; height: 200%; }
 
         /* مودال */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
         .modal-content { background: #0f121a; border: 1px solid var(--main-color); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
         .close { position: absolute; top: 15px; left: 15px; color: #fff; font-size: 22px; cursor: pointer; }
-        .chat-box { height: 300px; overflow-y: auto; background: #000; padding: 10px; margin-bottom: 10px; border-radius: 10px; text-align: right; }
-        .msg { background: #333; padding: 5px 10px; border-radius: 10px; margin-bottom: 5px; display: inline-block; }
-        .msg.me { background: var(--main-color); color: #000; }
         .timer { font-family: monospace; font-size: 1.2rem; margin-top: 10px; color: #fff; }
-
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -191,10 +131,12 @@
         <div class="login-card">
             <div class="login-logo">Full Mark Two</div>
             <p style="color:#888; margin-bottom:20px;">أدخل كود الطالب</p>
-            <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
-            <button class="login-btn" onclick="checkCode()">دخول</button>
+            <form onsubmit="event.preventDefault(); checkCode();">
+                <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
+                <button type="submit" class="login-btn">دخول</button>
+            </form>
             <div id="loginMsg" class="error-msg"></div>
-            <button onclick="document.getElementById('codeParams').value='123456'" style="opacity:0; width:1px; height:1px;">.</button>
+            <p style="color:#555; font-size:0.8rem; margin-top:10px;">كود التجربة: 123456</p>
         </div>
     </div>
 
@@ -208,7 +150,6 @@
         <header>
             <h1>🎓 Full Mark Two</h1>
             <div class="header-icons">
-                <div class="icon-btn" onclick="openSupport()"><i class="fas fa-headset"></i></div>
                 <div class="icon-btn" onclick="openProfile()"><i class="fas fa-user"></i></div>
                 <div class="icon-btn logout-btn" onclick="logout()"><i class="fas fa-power-off"></i></div>
             </div>
@@ -227,36 +168,31 @@
             <h3 style="color:var(--main-color)">الملف الشخصي</h3>
             <div id="pName" style="font-size:1.5rem; font-weight:bold; margin:10px 0;">...</div>
             <div id="pCode" style="color:#888; font-family:monospace;">...</div>
-            <div class="timer" id="countdown">...</div>
-        </div>
-    </div>
-
-    <div id="supportModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('supportModal')">&times;</span>
-            <h3>الدعم الفني</h3>
-            <div class="chat-box" id="chatBody"></div>
-            <div style="display:flex; gap:5px;">
-                <input type="text" id="chatInput" style="flex:1; padding:10px; border-radius:5px; border:none;" placeholder="رسالتك...">
-                <button onclick="sendMsg()" style="padding:10px; background:var(--main-color); border:none; border-radius:5px;">إرسال</button>
-            </div>
         </div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds", authDomain: "full-mark-8d434.firebaseapp.com", projectId: "full-mark-8d434", storageBucket: "full-mark-8d434.firebasestorage.app", messagingSenderId: "802579483999", appId: "1:802579483999:web:cf73136ffbd75d5e0ebaea" };
-        firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
+        // ==========================================
+        // 🔐 قائمة الأكواد المسموح بها (ضيف أكوادك هنا)
+        // ==========================================
+        const ALLOWED_CODES = {
+            "123456": "زائر تجريبي",
+            "100200": "أحمد محمد",
+            "556677": "مريم علي",
+            "998877": "طالب مميز"
+        };
 
         // --- نظام الدخول ---
         let countTimer;
 
         window.onload = function() {
+            // تنضيف أي مخلفات قديمة
+            document.body.style.overflow = "auto";
+            
             const savedUser = localStorage.getItem('fullmark_user');
-            if(savedUser) {
+            if(savedUser && ALLOWED_CODES[savedUser]) {
                 startCountdown();
             } else {
                 document.getElementById('loginSection').style.display = 'flex';
@@ -271,31 +207,18 @@
             if(!code) { msg.innerText = "اكتب الكود!"; msg.style.display = 'block'; return; }
             
             btn.innerText = "جاري التحقق...";
-            msg.style.display = 'none';
 
-            // الكود السحري
-            if(code === '123456') {
-                localStorage.setItem('fullmark_user', code);
-                startCountdown();
-                return;
-            }
-
-            // الفايربيز (البحث عن الكود)
-            db.collection('codes').where('code', '==', code).get().then(snap => {
-                if(snap.empty) {
+            // التحقق من القائمة المحلية (سريع ومضمون)
+            setTimeout(() => { // تأخير بسيط عشان يبان كأنه بيحمل
+                if(ALLOWED_CODES[code]) {
+                    localStorage.setItem('fullmark_user', code);
+                    startCountdown();
+                } else {
                     msg.innerText = "❌ الكود غير صحيح!";
                     msg.style.display = 'block';
                     btn.innerText = "دخول";
-                } else {
-                    localStorage.setItem('fullmark_user', code);
-                    startCountdown();
                 }
-            }).catch(e => {
-                console.error(e); // شوف المشكلة في الكونسول
-                msg.innerText = "⚠️ مشكلة اتصال: " + e.message;
-                msg.style.display = 'block';
-                btn.innerText = "دخول";
-            });
+            }, 800);
         }
 
         function startCountdown() {
@@ -313,7 +236,7 @@
                     clearInterval(countTimer);
                     document.getElementById('welcomeSection').style.display = 'none';
                     document.getElementById('platformSection').style.display = 'block';
-                    loadAndMerge(); // حمل الداتا
+                    // هنا ممكن تضيف دالة تحميل الداتا لو عايز
                 }
             }, 1000);
         }
@@ -329,8 +252,19 @@
             location.reload();
         }
 
+        function openModal(id){ document.getElementById(id).style.display='flex'; }
+        function closeModal(id){ document.getElementById(id).style.display='none'; }
+        
+        function openProfile() {
+            openModal('profileModal');
+            const code = localStorage.getItem('fullmark_user');
+            const name = ALLOWED_CODES[code] || "غير معروف";
+            document.getElementById('pName').innerText = name;
+            document.getElementById('pCode').innerText = code;
+        }
+
         // ==========================================
-        // 1. الداتا الجديدة (نظام المجلدات)
+        // 1. الداتا (نظام المجلدات)
         // ==========================================
         
         let platformData = [
@@ -350,9 +284,7 @@
                     "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
                     "videos": [
                         { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج والقواعد الأساسية.", "vid": "3PC1fxpp-Xk" },
-                        { "title": "جزء اتنين تالتة ثانوي", "desc": "استكمال الشرح والتدريبات.", "vid": "fVJTHj5YW7Y" },
-                        { "title": "جزء تلاتة تالتة ثانوي", "desc": "شرح متقدم وملاحظات هامة.", "vid": "Afx9AHypc7M" },
-                        { "title": "الجزء الاخير تالتة ثانوي", "desc": "ختام المنهج والمراجعة.", "vid": "6s_TWiP1KgQ" }
+                        { "title": "جزء اتنين تالتة ثانوي", "desc": "استكمال الشرح والتدريبات.", "vid": "fVJTHj5YW7Y" }
                     ]
                   }
                 ]
@@ -380,71 +312,132 @@
                 ]
               }
             ]
-          },
-          {
-            "id": 3,
-            "name": "الألماني",
-            "image": "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
-            "teachers": [
-              {
-                "id": 301,
-                "name": "هير ياسين ابو الزيد",
-                "image": "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg",
-                "folders": [
-                    {
-                        "id": "f3",
-                        "title": "كورس التأسيس والشرح",
-                        "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png",
-                        "videos": [
-                            { "title": "اللغة الألمانية - ج1", "desc": "الأساسيات وقواعد النطق.", "vid": "JOLc4Jc9yFU" },
-                            { "title": "اللغة الألمانية - ج2", "desc": "الجراماتيك وتريكات الامتحانات.", "vid": "L2irLAg7jHM" },
-                            { "title": "اللغة الألمانية - ج3", "desc": "المواقف الحياتية.", "vid": "I-3VLcEoCP8" },
-                            { "title": "اللغة الألمانية - ج4", "desc": "حل تدريبات شاملة.", "vid": "oRopKQ63a-I" }
-                        ]
-                    }
-                ]
-              }
-            ]
-          },
-          {
-            "id": 4,
-            "name": "الإسباني",
-            "image": "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
-            "teachers": [
-              {
-                "id": 401,
-                "name": "سنيور ماجد فارس",
-                "image": "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg",
-                "folders": [
-                    {
-                        "id": "f4",
-                        "title": "المراجعة النهائية",
-                        "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png",
-                        "videos": [
-                             { "title": "شرح المنهج كاملاً", "desc": "فيديو واحد فيه الخلاصة.", "vid": "K9ZOydc1cqs" }
-                        ]
-                    }
-                ]
-              }
-            ]
           }
         ];
 
-        async function loadAndMerge() {
-            try {
-                const snap = await db.collection('new_videos').get();
-                snap.forEach(doc => {
-                    const v = doc.data();
-                    let sub = platformData.find(s => s.name === v.subject);
-                    if(!sub) { sub = { name: v.subject, image: v.subImg || "https://cdn-icons-png.flaticon.com/512/2997/2997380.png", teachers: [] }; platformData.push(sub); }
-                    
-                    let teacher = sub.teachers.find(t => t.name === v.teacher);
-                    if(!teacher) { teacher = { name: v.teacher, image: v.techImg || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", folders: [] }; sub.teachers.push(teacher); }
-                    
-                    let folder = teacher.folders.find(f => f.title === v.course);
-                    if(!folder) { folder = { title: v.course, image: "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", videos: [] }; teacher.folders.push(folder); }
-                    
-                    folder.videos.push({ title: v.videoName, desc: "تمت إضافته حديثاً", vid: v.videoLink });
-                });
-                renderSubjects();
+        // ==========================================
+        // 2. منطق العرض
+        // ==========================================
+
+        const contentArea = document.getElementById('contentArea');
+        const sectionTitle = document.getElementById('sectionTitle');
+        const backBtn = document.getElementById('backBtn');
+        
+        let state = {
+            level: 'subjects', 
+            subjectIdx: null,
+            teacherIdx: null,
+            folderIdx: null
+        };
+
+        function showSubjects() {
+            state.level = 'subjects';
+            sectionTitle.innerText = "اختر المادة";
+            backBtn.style.display = 'none';
+            contentArea.className = "grid-container";
+            contentArea.innerHTML = '';
+
+            platformData.forEach((subject, index) => {
+                contentArea.innerHTML += `
+                    <div class="card" onclick="showTeachers(${index})">
+                        <img src="${subject.image}" class="card-img" alt="${subject.name}">
+                        <div class="card-body">
+                            <div class="card-title">${subject.name}</div>
+                            <div class="card-desc">اضغط لعرض المدرسين</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function showTeachers(idx) {
+            state.level = 'teachers';
+            state.subjectIdx = idx;
+            const subject = platformData[idx];
+            sectionTitle.innerText = `مدرسين مادة ${subject.name}`;
+            backBtn.style.display = 'inline-block';
+            contentArea.className = "grid-container";
+            contentArea.innerHTML = '';
+
+            subject.teachers.forEach((teacher, tIndex) => {
+                contentArea.innerHTML += `
+                    <div class="card" onclick="showFolders(${tIndex})">
+                        <img src="${teacher.image}" class="card-img" alt="${teacher.name}">
+                        <div class="card-body">
+                            <div class="card-title">${teacher.name}</div>
+                            <div class="card-desc">اضغط لعرض الكورسات</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function showFolders(tIndex) {
+            state.level = 'folders';
+            state.teacherIdx = tIndex;
+            const teacher = platformData[state.subjectIdx].teachers[tIndex];
+            sectionTitle.innerText = `كورسات: ${teacher.name}`;
+            contentArea.className = "grid-container";
+            contentArea.innerHTML = '';
+
+            teacher.folders.forEach((folder, fIndex) => {
+                contentArea.innerHTML += `
+                    <div class="card folder-card" onclick="showVideos(${fIndex})">
+                        <img src="${folder.image}" class="card-img" alt="Folder">
+                        <div class="card-body">
+                            <div class="card-title">${folder.title}</div>
+                            <div class="card-desc">${folder.videos.length} فيديوهات</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function showVideos(fIndex) {
+            state.level = 'videos';
+            state.folderIdx = fIndex;
+            const folder = platformData[state.subjectIdx].teachers[state.teacherIdx].folders[fIndex];
+            sectionTitle.innerText = folder.title;
+            contentArea.className = ""; 
+            contentArea.innerHTML = '';
+
+            folder.videos.forEach((video, vIndex) => {
+                contentArea.innerHTML += `
+                    <div class="video-wrapper">
+                        <div class="plyr__video-embed" id="player-${vIndex}">
+                            <iframe
+                                src="https://www.youtube.com/embed/${video.vid}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+                                allowfullscreen
+                                allowtransparency
+                                allow="autoplay"
+                            ></iframe>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">🎥 ${video.title}</div>
+                            <div style="color:#666;">${video.desc}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            Plyr.setup('.plyr__video-embed', {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+                youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1 }
+            });
+        }
+
+        function goBack() {
+            if (state.level === 'videos') {
+                showFolders(state.teacherIdx);
+            } else if (state.level === 'folders') {
+                showTeachers(state.subjectIdx);
+            } else if (state.level === 'teachers') {
+                showSubjects();
             }
+        }
+
+        showSubjects();
+
+    </script>
+</body>
+</html>
