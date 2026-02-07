@@ -10,13 +10,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* --- الثيم الأزرق النيون --- */
         :root { --main: #00e1ff; --bg: #02050a; --card-bg: #0a0f18; --text: #fff; }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
         
-        body { background: linear-gradient(135deg, #02050a 0%, #050a14 100%); color: var(--text); min-height: 100vh; overflow-x: hidden; margin: 0; }
+        body { 
+            background: linear-gradient(135deg, #02050a 0%, #050a14 100%); 
+            color: var(--text); min-height: 100vh; overflow-x: hidden; margin: 0; 
+        }
 
-        /* شاشة الدخول */
+        /* --- شاشة الدخول --- */
         #loginSection {
             height: 100vh; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #1a2332 0%, #000000 100%);
@@ -30,15 +34,18 @@
         .login-logo { font-size: 2.5rem; font-weight: 900; color: var(--main); margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--main); }
         .login-input {
             width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
-            border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; outline: none; margin-bottom: 20px;
+            border-radius: 50px; color: #fff; text-align: center; font-size: 1.2rem; margin-bottom: 20px;
         }
+        .login-input:focus { border-color: var(--main); }
         .login-btn {
             width: 100%; padding: 15px; background: var(--main); color: #000; border: none; 
             border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
-        .login-btn:hover { box-shadow: 0 0 20px var(--main); background: #fff; }
-        
-        /* شاشة الترحيب */
+        .login-btn:hover { background: #fff; box-shadow: 0 0 20px var(--main); }
+        .login-btn:disabled { background: #555; cursor: not-allowed; }
+        .error-msg { color: #ff3333; margin-top: 15px; font-weight: bold; display: none; }
+
+        /* --- شاشة الترحيب --- */
         #welcomeSection {
             display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center;
             background: #000; position: fixed; top: 0; left: 0; width: 100%; z-index: 1999;
@@ -52,7 +59,7 @@
         @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
         .welcome-text { margin-top: 20px; color: #888; font-size: 1.1rem; }
 
-        /* المنصة */
+        /* --- المنصة --- */
         #platformSection { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
         header {
@@ -96,6 +103,7 @@
         .video-wrapper { background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; position: relative; }
         .video-info { padding: 15px; background: #111; border-bottom: 1px solid #333; }
         .video-title { font-size: 1.1rem; font-weight: bold; color: var(--main); }
+        
         .watermark { position: absolute; top: 20px; left: 20px; color: rgba(255,255,255,0.3); font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 100; animation: float 6s infinite alternate; }
         @keyframes float { 0% {top:10%;left:10%} 100% {top:80%;left:80%} }
 
@@ -115,8 +123,11 @@
         <div class="login-card">
             <div class="login-logo">ذاكرلي</div>
             <p style="color:#888; margin-bottom:20px;">أدخل كود الطالب</p>
-            <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
-            <button class="login-btn" onclick="checkCode()">دخول</button>
+            <form onsubmit="event.preventDefault(); checkCode();">
+                <input type="text" id="codeParams" class="login-input" placeholder="الكود هنا" autocomplete="off">
+                <button type="submit" id="loginBtn" class="login-btn">دخول</button>
+            </form>
+            <div id="loginMsg" class="error-msg"></div>
             <p style="color:#555; font-size:0.8rem; margin-top:10px;">كود التجربة: 123456</p>
         </div>
     </div>
@@ -177,48 +188,52 @@
         const firebaseConfig = { apiKey: "AIzaSyBKY38XHjmC-iGqGrQio_YZ_i1iaIaE2Ds", authDomain: "full-mark-8d434.firebaseapp.com", projectId: "full-mark-8d434", storageBucket: "full-mark-8d434.firebasestorage.app", messagingSenderId: "802579483999", appId: "1:802579483999:web:cf73136ffbd75d5e0ebaea" };
         firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
 
-        // --- نظام الدخول الذكي ---
+        // --- 1. نظام الدخول ---
         let countTimer;
 
-        // عند فتح الصفحة، شوف لو مسجل قبل كدة
         window.onload = function() {
             const savedUser = localStorage.getItem('fullmark_user');
             if(savedUser) {
-                // لو مسجل، شغل العداد علطول
                 startCountdown();
             } else {
-                // لو مش مسجل، اظهر الدخول
                 document.getElementById('loginSection').style.display = 'flex';
             }
         };
 
         function checkCode() {
             const code = document.getElementById('codeParams').value.trim();
-            const btn = document.querySelector('.login-btn');
+            const msg = document.getElementById('loginMsg');
+            const btn = document.getElementById('loginBtn');
 
-            if(!code) { alert("اكتب الكود!"); return; }
+            if(!code) { msg.innerText = "اكتب الكود!"; msg.style.display = 'block'; return; }
             
             btn.innerText = "جاري التحقق...";
+            btn.disabled = true;
+            msg.style.display = 'none';
 
-            // الكود السحري للتجربة (عشان تدخلي فوراً)
+            // 1. الكود السحري (للتجربة)
             if(code === '123456') {
                 localStorage.setItem('fullmark_user', code);
                 startCountdown();
                 return;
             }
 
-            // البحث في الفايربيز
+            // 2. التحقق من الفايربيز
             db.collection('codes').where('code', '==', code).get().then(snap => {
                 if(snap.empty) {
-                    alert("❌ الكود غلط! تأكد من الكود أو جرب 123456");
+                    msg.innerText = "❌ الكود غير صحيح!";
+                    msg.style.display = 'block';
                     btn.innerText = "دخول";
+                    btn.disabled = false;
                 } else {
                     localStorage.setItem('fullmark_user', code);
                     startCountdown();
                 }
             }).catch(e => {
-                alert("⚠️ مشكلة في النت: " + e.message);
+                msg.innerText = "⚠️ خطأ في الاتصال: " + e.message;
+                msg.style.display = 'block';
                 btn.innerText = "دخول";
+                btn.disabled = false;
             });
         }
 
@@ -237,7 +252,7 @@
                     clearInterval(countTimer);
                     document.getElementById('welcomeSection').style.display = 'none';
                     document.getElementById('platformSection').style.display = 'block';
-                    loadAndMerge(); // حمل الداتا
+                    loadAndMerge(); 
                 }
             }, 1000);
         }
@@ -245,9 +260,7 @@
         function cancelLogin() {
             clearInterval(countTimer);
             localStorage.removeItem('fullmark_user');
-            document.getElementById('welcomeSection').style.display = 'none';
-            document.getElementById('loginSection').style.display = 'flex';
-            document.querySelector('.login-btn').innerText = "دخول";
+            location.reload();
         }
 
         function logout() {
@@ -255,7 +268,7 @@
             location.reload();
         }
 
-        // --- منطق المنصة (الداتا والعرض) ---
+        // --- 2. الداتا ---
         let platformData = [
           {
             "id": 1, "name": "الفرنساوي", "image": "https://i.postimg.cc/NjRcy2s0/a75e136b-7909-485f-95e8-862fddd2c0bc.png", 
@@ -263,27 +276,22 @@
               {
                 "id": 101, "name": "مسيو انس السعيد", "image": "https://i.postimg.cc/sDdy3JyV/lhctmi-Qt-ANEg0PDcec-CE1QTCqr-Kza-Eq-GZ6s-Zt-MJ4.jpg",
                 "folders": [
-                  { "id": "f1", "title": "كورس شرح المنهج 2026", "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", "videos": [ { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج", "vid": "3PC1fxpp-Xk" }, { "title": "جزء اتنين", "desc": "استكمال الشرح", "vid": "fVJTHj5YW7Y" } ] }
+                  { "id": "f1", "title": "كورس شرح المنهج 2026", "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", "videos": [ { "title": "جزء واحد تالتة ثانوي", "desc": "بداية المنهج", "vid": "3PC1fxpp-Xk" } ] }
                 ]
               }
             ]
           },
           {
             "id": 2, "name": "الإيطالي", "image": "https://i.postimg.cc/VkX8S0fb/Hotels-near-the-Colosseum.jpg",
-            "teachers": [
-              {
-                "id": 201, "name": "سنيور مدحت غانم", "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg",
-                "folders": [ { "id": "f2", "title": "مراجعات ليلة الامتحان", "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png", "videos": [ { "title": "الإنقاذ: المنهج كامل", "desc": "المنهج كله", "vid": "T6hpZH5AMnk" } ] } ]
-              }
-            ]
+            "teachers": [ { "id": 201, "name": "سنيور مدحت غانم", "image": "https://i.postimg.cc/0NQ1VWGy/hqdefault.jpg", "folders": [ { "id": "f2", "title": "مراجعات ليلة الامتحان", "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png", "videos": [ { "title": "الإنقاذ: المنهج كامل", "desc": "المنهج كله", "vid": "T6hpZH5AMnk" } ] } ] } ]
           },
           {
-            "id": 3, "name": "الألماني", "image": "https://i.postimg.cc/bw1hGSyS/52023310-702.jpg",
-            "teachers": [ { "id": 301, "name": "هير ياسين ابو الزيد", "image": "https://i.postimg.cc/MHkkKzCd/hqdefault-(1).jpg", "folders": [ { "id": "f3", "title": "كورس التأسيس", "image": "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", "videos": [ { "title": "الأساسيات", "desc": "بداية اللغة", "vid": "JOLc4Jc9yFU" } ] } ] } ]
+            "id": 3, "name": "اللغة العربية", "image": "https://i.postimg.cc/L6xvnk5X/mn-awl-mn-tklm-allght-alʿrbyt.jpg",
+            "teachers": [{ name: "أ. محمد صلاح", image: "https://i.postimg.cc/ZRJy8gDR/FB-IMG-1770382315133.jpg", folders: [] }]
           },
           {
-            "id": 4, "name": "الإسباني", "image": "https://i.postimg.cc/L8jpqg95/250px-Flag-of-Spain-svg.png",
-            "teachers": [ { "id": 401, "name": "سنيور ماجد فارس", "image": "https://i.postimg.cc/jdbVpdQ5/FB-IMG-1770239115997.jpg", "folders": [ { "id": "f4", "title": "المراجعة النهائية", "image": "https://cdn-icons-png.flaticon.com/512/2921/2921226.png", "videos": [ { "title": "شرح المنهج", "desc": "فيديو واحد", "vid": "K9ZOydc1cqs" } ] } ] } ]
+            "id": 4, "name": "الكيمياء", "image": "https://static.vecteezy.com/system/resources/previews/014/472/954/original/chemistry-logo-template-illustration-free-vector.jpg",
+            "teachers": [{ name: "أ. محمد عبدالجواد", image: "https://files.coursatk.online/images/questions/23b4ebea27532d1d05b2f7de5f26e63add3e4ca8ffcd.jpg", folders: [] }]
           }
         ];
 
@@ -294,20 +302,17 @@
                     const v = doc.data();
                     let sub = platformData.find(s => s.name === v.subject);
                     if(!sub) { sub = { name: v.subject, image: v.subImg || "https://cdn-icons-png.flaticon.com/512/2997/2997380.png", teachers: [] }; platformData.push(sub); }
-                    
                     let teacher = sub.teachers.find(t => t.name === v.teacher);
                     if(!teacher) { teacher = { name: v.teacher, image: v.techImg || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", folders: [] }; sub.teachers.push(teacher); }
-                    
                     let folder = teacher.folders.find(f => f.title === v.course);
                     if(!folder) { folder = { title: v.course, image: "https://cdn-icons-png.flaticon.com/512/3767/3767084.png", videos: [] }; teacher.folders.push(folder); }
-                    
                     folder.videos.push({ title: v.videoName, desc: "تمت إضافته حديثاً", vid: v.videoLink, type: "hls" });
                 });
                 renderSubjects();
             } catch(e) { console.log(e); renderSubjects(); }
         }
 
-        // --- منطق العرض والتنقل ---
+        // --- 3. العرض ---
         const contentArea = document.getElementById('contentArea');
         const sectionTitle = document.getElementById('sectionTitle');
         const backBtn = document.getElementById('backBtn');
@@ -365,4 +370,5 @@
                         <div class="video-desc">${v.desc}</div>
                     </div>
                     <div class="plyr__video-embed" id="player-${i}">
-                        ${v.type === 'hls' || v.vi
+                        ${v.type === 'hls' || v.vid.includes('http') && !v.vid.includes('youtu') ? 
+               
