@@ -183,7 +183,18 @@ let liveMode = false;
 let currentFilter = 'none';
 let busy = false;
 let shots = [];
-const GIF_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js';
+const GIF_WORKER_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js';
+let gifWorkerBlobUrl = null;
+
+async function getWorkerUrl(){
+  if(gifWorkerBlobUrl) return gifWorkerBlobUrl;
+  const resp = await fetch(GIF_WORKER_SRC);
+  if(!resp.ok) throw new Error('worker fetch failed: ' + resp.status);
+  const text = await resp.text();
+  const blob = new Blob([text], { type:'application/javascript' });
+  gifWorkerBlobUrl = URL.createObjectURL(blob);
+  return gifWorkerBlobUrl;
+}
 
 const FILTERS = {
   none:  '',
@@ -273,13 +284,24 @@ async function takeShot(){
   shutter.classList.add('recording');
   statusEl.textContent = 'بيلتقط...';
 
+  let workerUrl;
+  try{
+    workerUrl = await getWorkerUrl();
+  }catch(err){
+    shutter.classList.remove('recording');
+    busy = false;
+    statusEl.textContent = 'فشل تحميل محرك GIF';
+    alert('مقدرتش أحمّل محرك بناء الصورة المتحركة (مشكلة شبكة أو حظر من المتصفح). جرب تاني أو تأكد إن النت شغال.');
+    return;
+  }
+
   const srcW = video.videoWidth, srcH = video.videoHeight;
   const scale = Math.min(1, 480/srcW);
   const w = Math.round(srcW*scale), h = Math.round(srcH*scale);
   const temp = document.createElement('canvas');
   temp.width = w; temp.height = h;
 
-  const gif = new GIF({ workers:2, quality:8, width:w, height:h, workerScript:GIF_WORKER });
+  const gif = new GIF({ workers:2, quality:8, width:w, height:h, workerScript:workerUrl });
 
   const frameCount = 12, frameDelay = 90; // ~1.1s moving picture, loops forever
   for(let i=0;i<frameCount;i++){
@@ -297,7 +319,17 @@ async function takeShot(){
     statusEl.textContent = facing==='user' ? 'أمامية' : 'خلفية';
     busy = false;
   });
-  gif.render();
+  gif.on('abort', ()=>{
+    statusEl.textContent = 'فشل بناء الصورة المتحركة';
+    busy = false;
+  });
+  try{
+    gif.render();
+  }catch(err){
+    statusEl.textContent = 'فشل بناء الصورة المتحركة';
+    busy = false;
+    alert('حصل خطأ أثناء بناء الصورة المتحركة: ' + err.message);
+  }
 }
 
 function addShot(shot){
@@ -330,4 +362,5 @@ galleryBtn.addEventListener('click', ()=> tray.classList.add('open'));
 closeTray.addEventListener('click', ()=> tray.classList.remove('open'));
 </script>
 </body>
-</html>
+  </html>
+  
