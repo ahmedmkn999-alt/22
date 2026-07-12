@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Aperture — كاميرا المتصفح</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
 <style>
   :root{
     --bg:#0c0c0e;
@@ -148,7 +149,7 @@
     </div>
   </div>
 
-  <div id="note">الصور بتتحمّل كملفات — اضغط "حفظ" على أي صورة/كليب في المعرض عشان تنزّله على تليفونك. ده تطبيق متصفح، مش تطبيق مثبّت من الآب ستور.</div>
+  <div id="note">اللايف فوتو هنا = ملف صورة واحد متحرك (GIF) بيتحرك لوحده لما تفتحه في أي مكان. اضغط "حفظ" على أي صورة في المعرض عشان تنزّلها على تليفونك. ده تطبيق متصفح، مش تطبيق مثبّت من الآب ستور.</div>
 
   <div id="tray">
     <div id="trayHead"><h3 class="mono">المعرض</h3><span id="closeTray">إغلاق ✕</span></div>
@@ -180,8 +181,9 @@ let stream = null;
 let facing = 'user';
 let liveMode = false;
 let currentFilter = 'none';
-let recorder = null;
+let busy = false;
 let shots = [];
+const GIF_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js';
 
 const FILTERS = {
   none:  '',
@@ -235,52 +237,67 @@ function doFlash(){
   setTimeout(()=> flash.style.opacity = '0', 90);
 }
 
+function drawFrame(targetCanvas, w, h){
+  const c = targetCanvas.getContext('2d');
+  c.save();
+  c.filter = FILTERS[currentFilter] || 'none';
+  if(facing==='user'){ c.translate(w,0); c.scale(-1,1); }
+  c.drawImage(video,0,0,w,h);
+  c.restore();
+}
+
 function capturePhotoBlob(){
   const w = video.videoWidth, h = video.videoHeight;
   canvas.width = w; canvas.height = h;
-  ctx.filter = FILTERS[currentFilter] || 'none';
-  // mirror if front camera, matches what user sees
-  if(facing==='user'){ ctx.translate(w,0); ctx.scale(-1,1); }
-  ctx.drawImage(video,0,0,w,h);
-  ctx.setTransform(1,0,0,1,0,0);
+  drawFrame(canvas, w, h);
   return new Promise(res=> canvas.toBlob(b=>res(b), 'image/jpeg', 0.92));
 }
 
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
 async function takeShot(){
-  if(!stream) return;
-  doFlash();
-  const photoBlob = await capturePhotoBlob();
-  const photoUrl = URL.createObjectURL(photoBlob);
+  if(!stream || busy) return;
   const stamp = new Date().toLocaleTimeString('ar-EG');
 
   if(!liveMode){
+    doFlash();
+    const photoBlob = await capturePhotoBlob();
+    const photoUrl = URL.createObjectURL(photoBlob);
     addShot({ type:'photo', url:photoUrl, label:'صورة', stamp });
     return;
   }
 
-  // live photo: record ~1.6s clip around the moment of capture
+  // live photo = a real animated picture (GIF): a burst of frames baked into one moving image file
+  busy = true;
+  doFlash();
   shutter.classList.add('recording');
-  const chunks = [];
-  try{
-    recorder = new MediaRecorder(stream, { mimeType: pickMime() });
-    recorder.ondataavailable = e => { if(e.data.size>0) chunks.push(e.data); };
-    recorder.onstop = () => {
-      shutter.classList.remove('recording');
-      const videoBlob = new Blob(chunks, { type: recorder.mimeType });
-      const videoUrl = URL.createObjectURL(videoBlob);
-      addShot({ type:'live', url:photoUrl, videoUrl, label:'لايف فوتو', stamp });
-    };
-    recorder.start();
-    setTimeout(()=> recorder.state==='recording' && recorder.stop(), 1600);
-  }catch(e){
-    shutter.classList.remove('recording');
-    addShot({ type:'photo', url:photoUrl, label:'صورة (اللايف مش مدعوم هنا)', stamp });
-  }
-}
+  statusEl.textContent = 'بيلتقط...';
 
-function pickMime(){
-  const opts = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'];
-  return opts.find(o=>MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(o)) || '';
+  const srcW = video.videoWidth, srcH = video.videoHeight;
+  const scale = Math.min(1, 480/srcW);
+  const w = Math.round(srcW*scale), h = Math.round(srcH*scale);
+  const temp = document.createElement('canvas');
+  temp.width = w; temp.height = h;
+
+  const gif = new GIF({ workers:2, quality:8, width:w, height:h, workerScript:GIF_WORKER });
+
+  const frameCount = 12, frameDelay = 90; // ~1.1s moving picture, loops forever
+  for(let i=0;i<frameCount;i++){
+    drawFrame(temp, w, h);
+    gif.addFrame(temp, { copy:true, delay:frameDelay });
+    await wait(frameDelay);
+  }
+
+  shutter.classList.remove('recording');
+  statusEl.textContent = 'بيجهّز الصورة المتحركة...';
+
+  gif.on('finished', blob=>{
+    const url = URL.createObjectURL(blob);
+    addShot({ type:'live', url, label:'صورة متحركة', stamp });
+    statusEl.textContent = facing==='user' ? 'أمامية' : 'خلفية';
+    busy = false;
+  });
+  gif.render();
 }
 
 function addShot(shot){
@@ -296,12 +313,13 @@ function renderTray(){
   shots.forEach((s, i)=>{
     const row = document.createElement('div');
     row.className = 'shot';
+    const isLive = s.type === 'live';
+    const ext = isLive ? 'gif' : 'jpg';
     row.innerHTML = `
       <img src="${s.url}" alt="shot">
       <div class="meta"><b>${s.label} #${shots.length - i}</b><small class="mono">${s.stamp}</small></div>
       <div class="actions">
-        <a download="aperture-photo-${i}.jpg" href="${s.url}">حفظ الصورة</a>
-        ${s.videoUrl ? `<a class="secondary" download="aperture-live-${i}.webm" href="${s.videoUrl}">حفظ الكليب</a>` : ''}
+        <a download="aperture-${isLive?'live':'photo'}-${i}.${ext}" href="${s.url}">حفظ</a>
       </div>`;
     shotsEl.appendChild(row);
   });
